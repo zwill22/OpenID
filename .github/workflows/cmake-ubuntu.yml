@@ -64,7 +64,7 @@ jobs:
       shell: bash
       run: |
         cd curl-build
-        make install
+        sudo make install
         cd ..
 
     - name: cache aws-sdk-cpp
