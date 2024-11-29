@@ -39,7 +39,7 @@ jobs:
       id: cache-curl
       uses: actions/cache@v4
       with:
-        path: ./curl-build
+        path: ./curl-8.11.0
         key: ${{matrix.os}}-curl-8.11.0
         restore-keys: ${{matrix.os}}-curl-
         
@@ -54,16 +54,15 @@ jobs:
       if: steps.cache-curl.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        mkdir curl-build
-        cd curl-build
-        ../curl-8.11.0/configure --with-openssl --without-libpsl
+        cd curl-8.11.0
+        ./configure --with-openssl --without-libpsl
         make
         cd ..
 
     - name: install curl
       shell: bash
       run: |
-        cd curl-build
+        cd curl-8.11.0
         sudo make install
         cd ..
 
@@ -71,7 +70,7 @@ jobs:
       id: cache-awssdk
       uses: actions/cache@v4
       with:
-        path: ./aws-sdk-cpp-build
+        path: ./aws-sdk-cpp
         key: ${{matrix.os}}-aws-sdk-cpp-1.11.0
         restore-keys: ${{matrix.os}}-aws-sdk-cpp-
 
@@ -88,16 +87,15 @@ jobs:
       if: steps.cache-awssdk.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        mkdir aws-sdk-cpp-build
-        cd aws-sdk-cpp-build
-        cmake ../aws-sdk-cpp -DBUILD_ONLY="cognito-idp"
+        cd aws-sdk-cpp
+        cmake . -DBUILD_ONLY="cognito-idp"
         cmake --build . --config=Release
         cd ..
     
     - name: install aws-sdk
       shell: bash
       run: |
-        cd aws-sdk-cpp-build
+        cd aws-sdk-cpp
         sudo cmake --build . --target install
         cd ..
         
