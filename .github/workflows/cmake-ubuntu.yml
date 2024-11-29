@@ -1,0 +1,102 @@
+# Workflow to build 
+name: CMake on Ubuntu
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        build_type: [Release]
+        compiler: [g++]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Summary
+      id: strings
+      shell: bash
+      run: |
+        echo "Operating system=${{matrix.os}}"
+        echo "Build type=${{matrix.build_type}}"
+        echo "C++ Compiler=${{matrix.compiler}}"
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: install cmake
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install -y cmake 
+
+    - name: cache aws-sdk-cpp
+      id: cache-awssdk
+      uses: actions/cache@v4
+      with:
+        path: ./aws-sdk-cpp-build
+        key: ${{matrix.os}}-aws-sdk-cpp-1.11.0
+        restore-keys: ${{matrix.os}}-aws-sdk-cpp-
+
+    - name: download aws-sdk
+      if: steps.cache-awssdk.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        git clone https://github.com/aws/aws-sdk-cpp --depth 1
+        cd aws-sdk-cpp
+        git submodule update --init --recursive --depth 1  
+        cd ..
+
+    - name: build aws-sdk
+      if: steps.cache-awssdk.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir aws-sdk-cpp-build
+        cd aws-sdk-cpp-build
+        cmake ../aws-sdk-cpp -DBUILD_ONLY="cognito-idp"
+        cmake --build . --config=Release
+        cd ..
+    
+    - name: install aws-sdk
+      shell: bash
+      run: |
+        cd aws-sdk-cpp-build
+        sudo cmake --build . --target install
+        cd ..
+        
+
+    - name: cache catch2
+      id: cache-catch
+      uses: actions/cache@v4
+      with:
+        path: ./Catch2
+        key: ${{matrix.os}}-Catch2-
+        restore-keys: ${{matrix.os}}-Catch2-
+
+    - name: build catch2
+      if: steps.cache-catch.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        git clone https://github.com/catchorg/Catch2.git --depth 1
+        cd Catch2
+        cmake -Bbuild -H. -DBUILD_TESTING=OFF
+        sudo cmake --build build/ --target install
+        cd ..
+
+    - name: install catch2
+      shell: bash
+      run: |
+        cd Catch2
+        sudo cmake --build build/ --target install
+        cd ..
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_COMPILER=${{matrix.compiler}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
