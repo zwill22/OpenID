@@ -1,0 +1,3 @@
+add_executable(cognitoSignUp cognito_signup.cpp)
+target_link_libraries(cognitoSignUp OpenBusAPIClient)
+

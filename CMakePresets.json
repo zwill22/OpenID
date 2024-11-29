@@ -2,25 +2,49 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "Clang 15.0.0 arm64-apple-darwin23.6.0 Debug",
-            "displayName": "Debug",
+            "name": "Clang_Debug",
+            "displayName": "ClangDebug",
             "description": "Build Debug with clang++",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "Clang 15.0.0 arm64-apple-darwin23.6.0 Release",
-            "displayName": "Release",
-            "description": "Build Release with clang++",
+            "name": "Clang_Debug_with_Examples",
+            "displayName": "ClangDebugWithExamples",
+            "description": "Build Debug with clang++ including example files",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_EXAMPLES": "ON"
+            }
+        },
+        {
+            "name": "Clang_Release",
+            "displayName": "ClangRelease",
+            "description": "Build Release with clang++",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "Clang_Release_with_Examples",
+            "displayName": "ClangReleaseWithExamples",
+            "description": "Build Release with clang++ including example files",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_EXAMPLES": "ON"
             }
         }
     ]
