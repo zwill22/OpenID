@@ -9,3 +9,7 @@ target_include_directories(catch
 add_executable(test-aws-sdk test_aws_sdk.cpp)
 target_link_libraries(test-aws-sdk catch ${AWSSDK_LINK_LIBRARIES})
 catch_discover_tests(test-aws-sdk)
+
+add_executable(test-include tesT_include.cpp)
+target_link_libraries(test-include catch OpenBusAPIClient)
+catch_discover_tests(test-include)

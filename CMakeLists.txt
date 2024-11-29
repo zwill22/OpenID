@@ -7,13 +7,18 @@ project(OpenBusAPIClient VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(SERVICE_COMPONENTS cognito-idp)
 
+message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 find_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})
 
-add_executable(OpenBusAPIClient OpenBusAPIClient.cpp)
+add_library(OpenBusAPIClient SHARED)
 
 target_link_libraries(OpenBusAPIClient ${AWSSDK_LINK_LIBRARIES})
+target_include_directories(OpenBusAPIClient INTERFACE ${CMAKE_SOURCE_DIR}/include)
+
+add_subdirectory(src)
 
 if (NOT DEFINED USE_CATCH)
     set(USE_CATCH ON)

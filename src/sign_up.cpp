@@ -1,3 +1,5 @@
+#include "sign_up.hpp"
+
 #include <iostream>
 #include <aws/core/Aws.h>
 #include <aws/cognito-idp/CognitoIdentityProviderClient.h>
@@ -8,7 +10,12 @@ using namespace Aws::Client;
 using namespace Aws::Utils;
 using namespace Aws::CognitoIdentityProvider;
 
-Aws::String getInput(const std::string & str, const int streamSize = 64) {
+namespace OpenBus {
+
+Aws::String getInput(
+    const std::string & str,
+    const int streamSize = 64
+    ) {
     std::cout << str << ": ";
     std::string input;
     getline(std::cin, input);
@@ -16,7 +23,7 @@ Aws::String getInput(const std::string & str, const int streamSize = 64) {
     return input;
 }
 
-void check_outcome(
+void checkOutcome(
     const Model::SignUpOutcome & outcome,
     const Aws::String & userName
     ) {
@@ -32,7 +39,7 @@ void check_outcome(
     }
 }
 
-int main() {
+void signUpUser() {
     Aws::SDKOptions options;
     options.loggingOptions.logLevel = Logging::LogLevel::Debug;
 
@@ -58,10 +65,10 @@ int main() {
         request.SetClientId(clientID);
         auto outcome = cognitoClient.SignUp(request);
 
-        check_outcome(outcome, userName);
+        checkOutcome(outcome, userName);
 
     }
     Aws::ShutdownAPI(options);
-
-    return result;
 }
+
+} // namespace OpenBus
