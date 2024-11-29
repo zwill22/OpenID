@@ -1,3 +1,4 @@
+# Required for Github runner
 cmake_minimum_required(VERSION 3.22)
 message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 

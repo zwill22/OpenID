@@ -34,11 +34,38 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y cmake 
+
+    - name: cache curl
+      id: cache-curl
+      uses: actions/cache@v4
+      with:
+        path: ./curl-build
+        key: ${{matrix.os}}-curl-8.11.0
+        restore-keys: ${{matrix.os}}-curl-
         
+    - name: download curl
+      if: steps.cache-curl.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        wget https://curl.se/download/curl-8.11.0.tar.xz
+        tar xf curl-8.11.0.tar.xz
+
+    - name: build curl
+      if: steps.cache-curl.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir curl-build
+        cd curl-build
+        ../curl-8.11.0/configure --with-openssl --without-libpsl
+        make
+        cd ..
+
     - name: install curl
       shell: bash
       run: |
-        sudo apt install -y curl 
+        cd curl-build
+        make install
+        cd ..
 
     - name: cache aws-sdk-cpp
       id: cache-awssdk
