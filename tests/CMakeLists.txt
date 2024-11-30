@@ -6,10 +6,10 @@ target_include_directories(catch
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>
 )
 
-add_executable(test-aws-sdk test_aws_sdk.cpp)
-target_link_libraries(test-aws-sdk catch ${AWSSDK_LINK_LIBRARIES})
-catch_discover_tests(test-aws-sdk)
-
 add_executable(test-include test_include.cpp)
 target_link_libraries(test-include catch OpenBusAPIClient)
 catch_discover_tests(test-include)
+
+add_executable(test-api-client test_api_client.cpp)
+target_link_libraries(test-api-client catch OpenBusAPIClient)
+catch_discover_tests(test-api-client)

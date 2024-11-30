@@ -54,13 +54,23 @@ void verifyUser(
     }
 }
 
+OpenBus::IDSettings get_settings() {
+    OpenBus::IDSettings settings;
+    settings.clientID = "59lgg6i7hcnv8kma81rn4i7qbr";
+    settings.clientRegion = "eu-west-2";
+    settings.userID = getInput("Enter User Name");
+    settings.password = getInput("Enter password");
+    settings.emailAddress = getInput("Enter E-mail address");
+
+    return settings;
+}
+
 int main() {
     OpenBus::APIClient client;
-    const auto userName = getInput("Enter User Name");
-    const auto password = getInput("Enter password");
-    const auto email = getInput("Enter E-mail address");
+
+    const auto settings = get_settings();
     
-    const auto idProvider = IDProvider(userName, password, email);
+    const auto idProvider = IDProvider(settings);
     try {
         idProvider.signUpUser();
     } catch (std::runtime_error e) {

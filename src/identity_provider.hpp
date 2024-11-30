@@ -4,15 +4,13 @@
 #include <string>
 #include <memory>
 
+#include "identity.hpp"
+
 namespace OpenBus {
 
 class IDProvider {
     public:
-    IDProvider(
-        const std::string & userName,
-        const std::string & userPassword,
-        const std::string & userEmail
-    );
+    IDProvider(const IDSettings &idSettings);
 
     ~IDProvider();
 
@@ -21,15 +19,10 @@ class IDProvider {
     void resendCode() const;
 
     private:
-    std::string userID;
-    std::string password;
-    std::string emailAddress;
+    IDSettings settings;
 
-    std::string clientRegion;
-    std::string clientID;
-
-    struct Client;
-    std::unique_ptr<Client> client;
+    struct IDProviderClient;
+    std::unique_ptr<IDProviderClient> idProviderClient;
 };
     
 
