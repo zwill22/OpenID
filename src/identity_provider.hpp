@@ -17,6 +17,7 @@ class IDProvider {
 
     void signUpUser() const;
     void verifyUser(const std::string & confirmationCode) const;
+    void resendCode() const;
 
     private:
     std::string userID;

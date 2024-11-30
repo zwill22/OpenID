@@ -7,37 +7,13 @@
 #include <aws/cognito-idp/model/ListUserPoolsRequest.h>
 #include <aws/cognito-idp/model/SignUpRequest.h>
 #include <aws/cognito-idp/model/ConfirmSignUpRequest.h>
+#include <aws/cognito-idp/model/ResendConfirmationCodeRequest.h>
 
 using namespace Aws::Utils;
 using namespace Aws::Client;
 using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
-
-template <typename Outcome>
-void checkOutcome(
-    const Outcome & outcome,
-    const Aws::String & userName
-    ) {
-    if (outcome.IsSuccess()) {
-        std::cout << "The signup request for " << userName << " was successful.\n";
-    }
-    else if (outcome.GetError().GetErrorType() == CognitoIdentityProviderErrors::USERNAME_EXISTS) {
-        throw std::runtime_error("The username already exists. Please enter a different username.");
-    } else {
-        std::cerr << "Error with CognitoIdentityProvider::SignUpRequest. "
-        << outcome.GetError().GetMessage() << '\n';
-        throw std::runtime_error("Error occurred during SignUpRequest");
-    }
-}
-
-void signUpUser(
-    const std::string & userName, 
-    const std::string & password,
-    const std::string & email
-) { 
-
-}
 
 ClientConfiguration setupClientConfig() {
     ClientConfiguration clientConfig;
@@ -79,7 +55,16 @@ void IDProvider::signUpUser() const {
     request.SetClientId(Constants::clientID);
     auto outcome = client->SignUp(request);
 
-    checkOutcome(outcome, userID);
+    if (outcome.IsSuccess()) {
+        std::cout << "User " << userID << " successfully signed up.\n";
+    } else if (outcome.GetError().GetErrorType() == CognitoIdentityProviderErrors::USERNAME_EXISTS) {
+        throw std::runtime_error("The username already exists. Please enter a different username.");
+    } else if (!outcome.IsSuccess()) {
+        throw std::runtime_error(
+            "Error with CognitoIdentityProvider::SignUpRequest. "
+            + outcome.GetError().GetMessage()
+        );
+    }
 }
 
 void IDProvider::verifyUser(const std::string & confirmationCode) const {
@@ -93,12 +78,27 @@ void IDProvider::verifyUser(const std::string & confirmationCode) const {
     auto outcome = client->ConfirmSignUp(request);
 
     if (outcome.IsSuccess()) {
-        std::cout << "ConfirmSignup was Successful.\n";
-        }
-    else {
-        std::cerr << "Error with CognitoIdentityProvider::ConfirmSignUp. "
-                      << outcome.GetError().GetMessage() << '\n';
+        std::cout << "User verified.\n";
+    } else {
+        throw std::runtime_error(
+            "Error with CognitoIdentityProvider::ConfirmSignUp. "
+            + outcome.GetError().GetMessage()
+        );
+    }
+}
 
+void IDProvider::resendCode() const {
+    Model::ResendConfirmationCodeRequest request;
+    request.SetUsername(userID);
+    request.SetClientId(Constants::clientID);
+    
+    auto outcome = client->ResendConfirmationCode(request);
+
+    if (!outcome.IsSuccess()) {
+        throw std::runtime_error(
+            "Error with CognitoIdentityProvider::ResendConfirmationCode. "
+            + outcome.GetError().GetMessage()
+        );
     }
 }
 
