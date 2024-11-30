@@ -1,5 +1,7 @@
 #include "sign_up.hpp"
 
+#include "config.hpp"
+
 #include <iostream>
 #include <aws/core/Aws.h>
 #include <aws/cognito-idp/CognitoIdentityProviderClient.h>
@@ -11,17 +13,6 @@ using namespace Aws::Utils;
 using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
-
-Aws::String getInput(
-    const std::string & str,
-    const int streamSize = 64
-    ) {
-    std::cout << str << ": ";
-    std::string input;
-    getline(std::cin, input);
-
-    return input;
-}
 
 void checkOutcome(
     const Model::SignUpOutcome & outcome,
@@ -39,22 +30,20 @@ void checkOutcome(
     }
 }
 
-void signUpUser() {
+void signUpUser(
+    const std::string & userName, 
+    const std::string & password,
+    const std::string & email
+    ) {
     Aws::SDKOptions options;
     options.loggingOptions.logLevel = Logging::LogLevel::Debug;
-
-    const auto userName = getInput("Enter User Name");
-    const auto password = getInput("Enter password");
-    const auto email = getInput("Enter E-mail address");
-    constexpr auto clientID = "59lgg6i7hcnv8kma81rn4i7qbr";
-    constexpr auto clientRegion = "eu-west-2";
     
     InitAPI(options);
     int result = 0;
     {
         ClientConfiguration clientConfig;
-        clientConfig.region = clientRegion;
-        clientConfig.appId = clientID;
+        clientConfig.region = Constants::clientRegion;
+        clientConfig.appId = Constants::clientID;
 
         CognitoIdentityProviderClient cognitoClient(clientConfig);
         Model::SignUpRequest request;
@@ -62,7 +51,7 @@ void signUpUser() {
         request.AddUserAttributes(Model::AttributeType().WithName("email").WithValue(email));
         request.SetUsername(userName);
         request.SetPassword(password);
-        request.SetClientId(clientID);
+        request.SetClientId(Constants::clientID);
         auto outcome = cognitoClient.SignUp(request);
 
         checkOutcome(outcome, userName);
