@@ -27,7 +27,6 @@ ClientConfiguration setupClientConfig(
     return clientConfig;
 }
 
-struct IDProvider::Options : public Aws::SDKOptions {};
 struct IDProvider::Client : public CognitoIdentityProviderClient {
     Client(
         const std::string & region,
@@ -44,16 +43,12 @@ IDProvider::IDProvider(
     password(userPassword),
     emailAddress(userEmail),
     clientRegion(Constants::clientRegion),
-    clientID(Constants::clientID),
-    options(new Options())
+    clientID(Constants::clientID)
 {
-    Aws::InitAPI(*options);
     this->client = std::make_unique<Client>(clientRegion, clientID);
 }
 
-IDProvider::~IDProvider() {
-    Aws::ShutdownAPI(*options);
-}
+IDProvider::~IDProvider() {}
 
 void IDProvider::signUpUser() const {
     Model::SignUpRequest request;

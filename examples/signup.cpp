@@ -1,4 +1,5 @@
 #include "identity_provider.hpp"
+#include "api_client.hpp"
 
 #include <string>
 #include <iostream>
@@ -54,6 +55,7 @@ void verifyUser(
 }
 
 int main() {
+    OpenBus::APIClient client;
     const auto userName = getInput("Enter User Name");
     const auto password = getInput("Enter password");
     const auto email = getInput("Enter E-mail address");

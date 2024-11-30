@@ -27,9 +27,6 @@ class IDProvider {
     std::string clientRegion;
     std::string clientID;
 
-    struct Options;
-    std::unique_ptr<Options> options;
-
     struct Client;
     std::unique_ptr<Client> client;
 };
