@@ -6,6 +6,7 @@
 #include <aws/cognito-idp/CognitoIdentityProviderClient.h>
 #include <aws/cognito-idp/model/ListUserPoolsRequest.h>
 #include <aws/cognito-idp/model/SignUpRequest.h>
+#include <aws/cognito-idp/model/ConfirmSignUpRequest.h>
 
 using namespace Aws::Utils;
 using namespace Aws::Client;
@@ -13,8 +14,9 @@ using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
 
+template <typename Outcome>
 void checkOutcome(
-    const Model::SignUpOutcome & outcome,
+    const Outcome & outcome,
     const Aws::String & userName
     ) {
     if (outcome.IsSuccess()) {
@@ -78,6 +80,26 @@ void IDProvider::signUpUser() const {
     auto outcome = client->SignUp(request);
 
     checkOutcome(outcome, userID);
+}
+
+void IDProvider::verifyUser(const std::string & confirmationCode) const {
+    Model::ConfirmSignUpRequest request;
+
+    request.SetUsername(userID);
+    request.SetConfirmationCode(confirmationCode);
+    request.SetClientId(Constants::clientID);
+
+
+    auto outcome = client->ConfirmSignUp(request);
+
+    if (outcome.IsSuccess()) {
+        std::cout << "ConfirmSignup was Successful.\n";
+        }
+    else {
+        std::cerr << "Error with CognitoIdentityProvider::ConfirmSignUp. "
+                      << outcome.GetError().GetMessage() << '\n';
+
+    }
 }
 
 } // namespace OpenBus
