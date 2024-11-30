@@ -24,6 +24,9 @@ class IDProvider {
     std::string password;
     std::string emailAddress;
 
+    std::string clientRegion;
+    std::string clientID;
+
     struct Options;
     std::unique_ptr<Options> options;
 

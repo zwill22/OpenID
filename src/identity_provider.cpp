@@ -15,18 +15,24 @@ using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
 
-ClientConfiguration setupClientConfig() {
+ClientConfiguration setupClientConfig(
+    const std::string & region,
+    const std::string & appID
+) {
     ClientConfiguration clientConfig;
 
-    clientConfig.region = Constants::clientRegion;
-    clientConfig.appId = Constants::clientID;
+    clientConfig.region = region;
+    clientConfig.appId = appID;
 
     return clientConfig;
 }
 
 struct IDProvider::Options : public Aws::SDKOptions {};
 struct IDProvider::Client : public CognitoIdentityProviderClient {
-    Client() : CognitoIdentityProviderClient(setupClientConfig())
+    Client(
+        const std::string & region,
+        const std::string & appID
+        ) : CognitoIdentityProviderClient(setupClientConfig(region, appID))
     {}
 };
 
@@ -37,10 +43,12 @@ IDProvider::IDProvider(
 ) : userID(userName),
     password(userPassword),
     emailAddress(userEmail),
+    clientRegion(Constants::clientRegion),
+    clientID(Constants::clientID),
     options(new Options())
 {
     Aws::InitAPI(*options);
-    this->client = std::make_unique<Client>();
+    this->client = std::make_unique<Client>(clientRegion, clientID);
 }
 
 IDProvider::~IDProvider() {
@@ -52,7 +60,7 @@ void IDProvider::signUpUser() const {
     request.AddUserAttributes(Model::AttributeType().WithName("email").WithValue(emailAddress));
     request.SetUsername(userID);
     request.SetPassword(password);
-    request.SetClientId(Constants::clientID);
+    request.SetClientId(clientID);
     auto outcome = client->SignUp(request);
 
     if (outcome.IsSuccess()) {
@@ -72,7 +80,7 @@ void IDProvider::verifyUser(const std::string & confirmationCode) const {
 
     request.SetUsername(userID);
     request.SetConfirmationCode(confirmationCode);
-    request.SetClientId(Constants::clientID);
+    request.SetClientId(clientID);
 
 
     auto outcome = client->ConfirmSignUp(request);
