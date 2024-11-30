@@ -2,6 +2,7 @@
 #define OPEN_BUS_COGNITO_IDENTITY_HPP
 
 #include <string>
+#include <memory>
 
 namespace OpenBus {
 
