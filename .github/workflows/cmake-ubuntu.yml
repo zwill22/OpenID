@@ -88,7 +88,7 @@ jobs:
       shell: bash
       run: |
         cd aws-sdk-cpp
-        cmake . -DBUILD_ONLY="cognito-idp"
+        cmake . -DBUILD_ONLY="cognito-idp;cognito-identity"
         cmake --build . --config=Release
         cd ..
     
