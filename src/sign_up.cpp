@@ -9,7 +9,6 @@
 #include <aws/cognito-idp/model/SignUpRequest.h>
 
 using namespace Aws::Client;
-using namespace Aws::Utils;
 using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
@@ -34,30 +33,20 @@ void signUpUser(
     const std::string & userName, 
     const std::string & password,
     const std::string & email
-    ) {
-    Aws::SDKOptions options;
-    options.loggingOptions.logLevel = Logging::LogLevel::Debug;
+) {
+    ClientConfiguration clientConfig;
+    clientConfig.region = Constants::clientRegion;
+    clientConfig.appId = Constants::clientID;
     
-    InitAPI(options);
-    int result = 0;
-    {
-        ClientConfiguration clientConfig;
-        clientConfig.region = Constants::clientRegion;
-        clientConfig.appId = Constants::clientID;
+    CognitoIdentityProviderClient cognitoClient(clientConfig);
+    Model::SignUpRequest request;
+    request.AddUserAttributes(Model::AttributeType().WithName("email").WithValue(email));
+    request.SetUsername(userName);
+    request.SetPassword(password);
+    request.SetClientId(Constants::clientID);
+    auto outcome = cognitoClient.SignUp(request);
 
-        CognitoIdentityProviderClient cognitoClient(clientConfig);
-        Model::SignUpRequest request;
-
-        request.AddUserAttributes(Model::AttributeType().WithName("email").WithValue(email));
-        request.SetUsername(userName);
-        request.SetPassword(password);
-        request.SetClientId(Constants::clientID);
-        auto outcome = cognitoClient.SignUp(request);
-
-        checkOutcome(outcome, userName);
-
-    }
-    Aws::ShutdownAPI(options);
+    checkOutcome(outcome, userName);
 }
 
 } // namespace OpenBus
