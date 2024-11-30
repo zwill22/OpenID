@@ -16,6 +16,7 @@ class IDProvider {
     ~IDProvider();
 
     void signUpUser() const;
+    void verifyUser() const;
 
     private:
     std::string userID;
@@ -23,7 +24,10 @@ class IDProvider {
     std::string emailAddress;
 
     struct Options;
-    std::unique_ptr<Options> pOptions;
+    std::unique_ptr<Options> options;
+
+    struct Client;
+    std::unique_ptr<Client> client;
 };
     
 
