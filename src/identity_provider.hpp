@@ -18,11 +18,16 @@ public:
     void verifyUser(const std::string & confirmationCode) const;
     void resendCode() const;
 
+    void passwordAuth();
+
 private:
     IDSettings settings;
 
     struct IDProviderClient;
     std::unique_ptr<IDProviderClient> idProviderClient;
+
+    struct AuthenticationResult;
+    std::unique_ptr<AuthenticationResult> authenticationResult;
 };
     
 

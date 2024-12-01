@@ -5,6 +5,8 @@
 #include <aws/cognito-idp/model/SignUpRequest.h>
 #include <aws/cognito-idp/model/ConfirmSignUpRequest.h>
 #include <aws/cognito-idp/model/ResendConfirmationCodeRequest.h>
+#include <aws/cognito-idp/model/InitiateAuthRequest.h>
+#include <aws/cognito-idp/model/RespondToAuthChallengeRequest.h>
 
 using namespace Aws::Utils;
 using namespace Aws::Client;
@@ -24,6 +26,8 @@ ClientConfiguration setupClientConfig(const IDSettings & settings) {
 struct IDProvider::IDProviderClient : public CognitoIdentityProviderClient {
     IDProviderClient(const IDSettings & settings) : CognitoIdentityProviderClient(setupClientConfig(settings)) {}
 };
+
+struct IDProvider::AuthenticationResult : public Model::AuthenticationResultType {};
 
 IDProvider::IDProvider(const IDSettings & idSettings ) : settings(idSettings) {
     this->idProviderClient = std::make_unique<IDProviderClient>(settings);
@@ -83,6 +87,56 @@ void IDProvider::resendCode() const {
             "Error with CognitoIdentityProvider::ResendConfirmationCode. "
             + outcome.GetError().GetMessage()
         );
+    }
+}
+
+void IDProvider::passwordAuth() {
+    Model::InitiateAuthRequest request;
+
+    request.SetAuthFlow(Model::AuthFlowType::USER_AUTH);
+    request.AddAuthParameters("USERNAME", settings.userID);
+    request.AddAuthParameters("PASSWORD", settings.userID);
+    request.SetClientId(settings.clientID);
+
+    auto outcome = idProviderClient->InitiateAuth(request);
+
+    if (!outcome.IsSuccess()) {
+        throw std::runtime_error(
+            "Error with CognitoIdentityProvider::InitiateAuth"
+            + outcome.GetError().GetMessage()
+        );
+    }
+
+    const auto result = outcome.GetResult();
+
+    Model::RespondToAuthChallengeRequest selectChallengeRequest;
+    selectChallengeRequest.SetChallengeName(result.GetChallengeName());
+    selectChallengeRequest.SetClientId(settings.clientID);
+    selectChallengeRequest.SetSession(result.GetSession());
+    selectChallengeRequest.SetChallengeResponses({
+        {"USERNAME", settings.userID},
+        {"PASSWORD", settings.password},
+        {"ANSWER", "PASSWORD"}
+    });
+
+    auto selectChallengeOutcome = idProviderClient->RespondToAuthChallenge(selectChallengeRequest);
+
+    if (!selectChallengeOutcome.IsSuccess()) {
+        throw std::runtime_error(
+            "Error with CognitoIdentityProvider::RespondToAuthChallenge\n"
+            + selectChallengeOutcome.GetError().GetMessage()
+        );
+    }
+
+    const auto selectChallengeResult = selectChallengeOutcome.GetResult();
+    if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NOT_SET) {
+        if (selectChallengeResult.GetSession() == "") {
+            authenticationResult = std::make_unique<AuthenticationResult>(selectChallengeResult.GetAuthenticationResult());
+        } else {
+            throw std::runtime_error("Additional authorisation response requested");
+        }
+    } else if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NEW_PASSWORD_REQUIRED) {
+        throw std::runtime_error("New password required");
     }
 }
 

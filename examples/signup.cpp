@@ -1,21 +1,13 @@
-#include "identity_provider.hpp"
-#include "api_client.hpp"
-
 #include <string>
 #include <iostream>
 
+#include "api_client.hpp"
+#include "identity_provider.hpp"
+#include "common.hpp"
+
 using OpenBus::IDProvider;
 
-std::string getInput(
-    const std::string & str,
-    const int streamSize = 64
-    ) {
-    std::cout << str << ": ";
-    std::string input;
-    getline(std::cin, input);
-
-    return input;
-}
+using namespace OpenBusExamples;
 
 bool getChoice(const std::string & str){
     while (true) {
@@ -54,21 +46,10 @@ void verifyUser(
     }
 }
 
-OpenBus::IDSettings get_settings() {
-    OpenBus::IDSettings settings;
-    settings.clientID = "59lgg6i7hcnv8kma81rn4i7qbr";
-    settings.clientRegion = "eu-west-2";
-    settings.userID = getInput("Enter User Name");
-    settings.password = getInput("Enter password");
-    settings.emailAddress = getInput("Enter E-mail address");
-
-    return settings;
-}
-
 int main() {
     OpenBus::APIClient client;
 
-    const auto settings = get_settings();
+    const auto settings = getSettings();
     
     const auto idProvider = IDProvider(settings);
     try {

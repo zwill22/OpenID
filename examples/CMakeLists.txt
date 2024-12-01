@@ -1,3 +1,5 @@
-add_executable(SignUp signup.cpp)
-target_link_libraries(SignUp OpenBusAPIClient)
+add_executable(SignUpExample signup.cpp)
+target_link_libraries(SignUpExample OpenBusAPIClient)
 
+add_executable(AuthenticationExample authenticate.cpp)
+target_link_libraries(AuthenticationExample OpenBusAPIClient)
