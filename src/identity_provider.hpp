@@ -9,7 +9,7 @@
 namespace OpenBus {
 
 class IDProvider {
-    public:
+public:
     IDProvider(const IDSettings &idSettings);
 
     ~IDProvider();
@@ -18,7 +18,7 @@ class IDProvider {
     void verifyUser(const std::string & confirmationCode) const;
     void resendCode() const;
 
-    private:
+private:
     IDSettings settings;
 
     struct IDProviderClient;
