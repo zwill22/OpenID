@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "identity.hpp"
+#include "authentication.hpp"
 
 namespace OpenBus {
 
@@ -18,16 +19,13 @@ public:
     void verifyUser(const std::string & confirmationCode) const;
     void resendCode() const;
 
-    void passwordAuth();
+    AuthenticationResult passwordAuth();
 
 private:
     IDSettings settings;
 
     struct IDProviderClient;
     std::unique_ptr<IDProviderClient> idProviderClient;
-
-    struct AuthenticationResult;
-    std::unique_ptr<AuthenticationResult> authenticationResult;
 };
     
 

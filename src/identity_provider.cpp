@@ -27,8 +27,6 @@ struct IDProvider::IDProviderClient : public CognitoIdentityProviderClient {
     IDProviderClient(const IDSettings & settings) : CognitoIdentityProviderClient(setupClientConfig(settings)) {}
 };
 
-struct IDProvider::AuthenticationResult : public Model::AuthenticationResultType {};
-
 IDProvider::IDProvider(const IDSettings & idSettings ) : settings(idSettings) {
     this->idProviderClient = std::make_unique<IDProviderClient>(settings);
 }
@@ -90,7 +88,7 @@ void IDProvider::resendCode() const {
     }
 }
 
-void IDProvider::passwordAuth() {
+AuthenticationResult IDProvider::passwordAuth() {
     Model::InitiateAuthRequest request;
 
     request.SetAuthFlow(Model::AuthFlowType::USER_AUTH);
@@ -131,12 +129,14 @@ void IDProvider::passwordAuth() {
     const auto selectChallengeResult = selectChallengeOutcome.GetResult();
     if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NOT_SET) {
         if (selectChallengeResult.GetSession() == "") {
-            authenticationResult = std::make_unique<AuthenticationResult>(selectChallengeResult.GetAuthenticationResult());
+            return getResults(selectChallengeResult.GetAuthenticationResult());
         } else {
-            throw std::runtime_error("Additional authorisation response requested");
+            throw std::runtime_error("Session provided - additional authorisation response expected");
         }
     } else if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NEW_PASSWORD_REQUIRED) {
         throw std::runtime_error("New password required");
+    } else {
+        throw std::runtime_error("Unknown additional challenge requested");
     }
 }
 
