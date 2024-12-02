@@ -14,6 +14,21 @@ using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenBus {
 
+template <typename Outcome, typename Request>
+auto checkOutcome(
+    Outcome outcome,
+    Request request
+) {
+    if (!outcome.IsSuccess()) {
+        throw std::runtime_error(
+            std::string(request.GetServiceRequestName()) + " Error: "
+            + outcome.GetError().GetMessage()
+        );
+    }
+
+    return outcome.GetResult();
+}
+
 ClientConfiguration setupClientConfig(const IDSettings & settings) {
     ClientConfiguration clientConfig;
 
@@ -39,18 +54,9 @@ void IDProvider::signUpUser() const {
     request.SetUsername(settings.userID);
     request.SetPassword(settings.password);
     request.SetClientId(settings.clientID);
-    auto outcome = idProviderClient->SignUp(request);
+    const auto outcome = idProviderClient->SignUp(request);
 
-    if (outcome.IsSuccess()) {
-        std::cout << "User " << settings.userID << " successfully signed up.\n";
-    } else if (outcome.GetError().GetErrorType() == CognitoIdentityProviderErrors::USERNAME_EXISTS) {
-        throw std::runtime_error("The username already exists. Please enter a different username.");
-    } else if (!outcome.IsSuccess()) {
-        throw std::runtime_error(
-            "Error with CognitoIdentityProvider::SignUpRequest. "
-            + outcome.GetError().GetMessage()
-        );
-    }
+    checkOutcome(outcome, request);
 }
 
 void IDProvider::verifyUser(const std::string & confirmationCode) const {
@@ -60,17 +66,8 @@ void IDProvider::verifyUser(const std::string & confirmationCode) const {
     request.SetConfirmationCode(confirmationCode);
     request.SetClientId(settings.clientID);
 
-
-    auto outcome = idProviderClient->ConfirmSignUp(request);
-
-    if (outcome.IsSuccess()) {
-        std::cout << "User verified.\n";
-    } else {
-        throw std::runtime_error(
-            "Error with CognitoIdentityProvider::ConfirmSignUp. "
-            + outcome.GetError().GetMessage()
-        );
-    }
+    const auto outcome = idProviderClient->ConfirmSignUp(request);
+    checkOutcome(outcome, request);
 }
 
 void IDProvider::resendCode() const {
@@ -78,14 +75,21 @@ void IDProvider::resendCode() const {
     request.SetUsername(settings.userID);
     request.SetClientId(settings.clientID);
     
-    auto outcome = idProviderClient->ResendConfirmationCode(request);
+    const auto outcome = idProviderClient->ResendConfirmationCode(request);
+    checkOutcome(outcome, request);
+}
 
-    if (!outcome.IsSuccess()) {
-        throw std::runtime_error(
-            "Error with CognitoIdentityProvider::ResendConfirmationCode. "
-            + outcome.GetError().GetMessage()
-        );
+template <typename ResultType>
+bool checkResult(const ResultType & result) {
+    if (result.GetChallengeName() == Model::ChallengeNameType::NOT_SET) {
+        if (result.GetSession() == "") {
+            return true;
+        }
+    } else if (result.GetChallengeName() == Model::ChallengeNameType::NEW_PASSWORD_REQUIRED) {
+        throw std::runtime_error("New password required");
     }
+    
+    return false;
 }
 
 AuthenticationResult IDProvider::passwordAuthenticate() const {
@@ -96,16 +100,13 @@ AuthenticationResult IDProvider::passwordAuthenticate() const {
     request.AddAuthParameters("PASSWORD", settings.userID);
     request.SetClientId(settings.clientID);
 
-    auto outcome = idProviderClient->InitiateAuth(request);
+    const auto outcome = idProviderClient->InitiateAuth(request);
 
-    if (!outcome.IsSuccess()) {
-        throw std::runtime_error(
-            "Error with CognitoIdentityProvider::InitiateAuth"
-            + outcome.GetError().GetMessage()
-        );
+    const auto result = checkOutcome(outcome, request);
+
+    if (checkResult(result)) {
+        return getResults(result.GetAuthenticationResult());
     }
-
-    const auto result = outcome.GetResult();
 
     Model::RespondToAuthChallengeRequest selectChallengeRequest;
     selectChallengeRequest.SetChallengeName(result.GetChallengeName());
@@ -117,27 +118,13 @@ AuthenticationResult IDProvider::passwordAuthenticate() const {
         {"ANSWER", "PASSWORD"}
     });
 
-    auto selectChallengeOutcome = idProviderClient->RespondToAuthChallenge(selectChallengeRequest);
-
-    if (!selectChallengeOutcome.IsSuccess()) {
-        throw std::runtime_error(
-            "Error with CognitoIdentityProvider::RespondToAuthChallenge\n"
-            + selectChallengeOutcome.GetError().GetMessage()
-        );
+    const auto selectChallengeOutcome = idProviderClient->RespondToAuthChallenge(selectChallengeRequest);
+    const auto selectChallengeResult = checkOutcome(selectChallengeOutcome, selectChallengeRequest);
+    if (checkResult(selectChallengeResult)) {
+        return getResults(selectChallengeResult.GetAuthenticationResult());
     }
 
-    const auto selectChallengeResult = selectChallengeOutcome.GetResult();
-    if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NOT_SET) {
-        if (selectChallengeResult.GetSession() == "") {
-            return getResults(selectChallengeResult.GetAuthenticationResult());
-        } else {
-            throw std::runtime_error("Session provided - additional authorisation response expected");
-        }
-    } else if (selectChallengeResult.GetChallengeName() == Model::ChallengeNameType::NEW_PASSWORD_REQUIRED) {
-        throw std::runtime_error("New password required");
-    } else {
-        throw std::runtime_error("Unknown additional challenge requested");
-    }
+    throw std::runtime_error("User not authorised");
 }
 
 } // namespace OpenBus
