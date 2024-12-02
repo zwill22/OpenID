@@ -7,6 +7,7 @@
 #include <aws/cognito-idp/model/ResendConfirmationCodeRequest.h>
 #include <aws/cognito-idp/model/InitiateAuthRequest.h>
 #include <aws/cognito-idp/model/RespondToAuthChallengeRequest.h>
+#include <aws/cognito-idp/model/DeleteUserRequest.h>
 
 using namespace Aws::Utils;
 using namespace Aws::Client;
@@ -125,6 +126,16 @@ AuthenticationResult IDProvider::passwordAuthenticate() const {
     }
 
     throw std::runtime_error("User not authorised");
+}
+
+void IDProvider::deleteUser(const AuthenticationResult & authentication) const {
+    Model::DeleteUserRequest request;
+
+    request.SetAccessToken(authentication.accessToken);
+    
+    const auto outcome = idProviderClient->DeleteUser(request);
+
+    checkOutcome(outcome, request);
 }
 
 } // namespace OpenBus

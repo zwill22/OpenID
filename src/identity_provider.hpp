@@ -21,6 +21,8 @@ public:
 
     AuthenticationResult passwordAuthenticate() const;
 
+    void deleteUser(const AuthenticationResult & authentication) const;
+
 private:
     IDSettings settings;
 

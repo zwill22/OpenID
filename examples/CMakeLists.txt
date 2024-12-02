@@ -3,3 +3,6 @@ target_link_libraries(SignUpExample OpenBusAPIClient)
 
 add_executable(AuthenticationExample authenticate.cpp)
 target_link_libraries(AuthenticationExample OpenBusAPIClient)
+
+add_executable(DeleteUserExample delete_user.cpp)
+target_link_libraries(DeleteUserExample OpenBusAPIClient)
