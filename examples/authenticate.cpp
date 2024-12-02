@@ -8,16 +8,28 @@
 using OpenBus::IDProvider;
 using OpenBus::IDSettings;
 
-void print_row(const int n = 64, const char c = '=') {
+void printRow(const int n = 64, const char c = '=') {
     std::cout << std::string(n, c) << '\n';
 }
 
-void print_token(const std::string & key, const std::string & value, const size_t truncate = 32) {
+void printToken(const std::string & key, const std::string & value, const size_t truncate = 32) {
     if (value.size() > truncate) {
         std::cout << key << ":\t" << value.substr(0, truncate) << "...\n";
     } else {
         std::cout << key << ":\t" << value << '\n';
     }
+}
+
+void printAuthentication(const auto & auth) {
+    printRow();
+    std::cout << "Authentication result" << '\n';
+    printRow();
+    printToken("Access Token", auth.accessToken);
+    std::cout << "Expiry time:\t" << auth.expiryTime << '\n';
+    printToken("ID Token", auth.idToken);
+    printToken("Refresh Token", auth.refreshToken);
+    printToken("Token Type", auth.tokenType);
+    printRow();
 }
 
 int main() {
@@ -26,17 +38,8 @@ int main() {
     const auto settings = OpenBusExamples::getSettings();
     
     auto idProvider = IDProvider(settings);
-    auto auth = idProvider.passwordAuth();
-
-    print_row();
-    std::cout << "Authentication result" << '\n';
-    print_row();
-    print_token("Access Token", auth.accessToken);
-    std::cout << "Expiry time:\t" << auth.expiryTime << '\n';
-    print_token("ID Token", auth.idToken);
-    print_token("Refresh Token", auth.refreshToken);
-    print_token("Token Type", auth.tokenType);
-    print_row();
+    auto auth = idProvider.passwordAuthenticate();
+    printAuthentication(auth);
 
     return 0;
 }

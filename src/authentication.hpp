@@ -15,7 +15,6 @@ struct AuthenticationResult {
     std::string tokenType;
 };
 
-
 template <typename ResultType>
 AuthenticationResult getResults(const ResultType & result) {
     AuthenticationResult authResults;
@@ -53,6 +52,6 @@ AuthenticationResult getResults(const ResultType & result) {
     return authResults;
 }
 
-}
+} // namespace OpenBus
 
 #endif // OPEN_BUS_AUTHENTICATION_HPP

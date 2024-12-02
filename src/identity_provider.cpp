@@ -88,7 +88,7 @@ void IDProvider::resendCode() const {
     }
 }
 
-AuthenticationResult IDProvider::passwordAuth() {
+AuthenticationResult IDProvider::passwordAuthenticate() const {
     Model::InitiateAuthRequest request;
 
     request.SetAuthFlow(Model::AuthFlowType::USER_AUTH);

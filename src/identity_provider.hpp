@@ -19,7 +19,7 @@ public:
     void verifyUser(const std::string & confirmationCode) const;
     void resendCode() const;
 
-    AuthenticationResult passwordAuth();
+    AuthenticationResult passwordAuthenticate() const;
 
 private:
     IDSettings settings;
