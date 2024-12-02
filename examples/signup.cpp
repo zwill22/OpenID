@@ -3,7 +3,7 @@
 
 #include "api_client.hpp"
 #include "identity_provider.hpp"
-#include "common.hpp"
+#include "examples_settings.hpp"
 
 using OpenBus::IDProvider;
 
