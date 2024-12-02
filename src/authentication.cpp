@@ -4,13 +4,4 @@
 
 namespace OpenBus {
 
-Authentication::Authentication(AuthenticationResult result)
-{
-    authenticationResult = result;
-}
-
-Authentication::~Authentication()
-{
-}
-
 }
