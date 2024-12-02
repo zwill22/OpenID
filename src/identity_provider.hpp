@@ -4,10 +4,18 @@
 #include <string>
 #include <memory>
 
-#include "identity.hpp"
 #include "authentication.hpp"
 
 namespace OpenBus {
+
+struct IDSettings {
+    std::string userID;
+    std::string password;
+    std::string emailAddress;
+
+    std::string clientRegion;
+    std::string clientID;
+};
 
 class IDProvider {
 public:

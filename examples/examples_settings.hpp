@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "identity.hpp"
+#include "identity_provider.hpp"
 
 namespace OpenBusExamples {
 

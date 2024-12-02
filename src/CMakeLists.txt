@@ -4,6 +4,5 @@ target_sources(
     OpenBusAPIClient PRIVATE
     api_client.cpp
     authentication.cpp
-    identity.cpp
     identity_provider.cpp
 )
