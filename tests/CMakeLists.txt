@@ -13,3 +13,7 @@ catch_discover_tests(test-include)
 add_executable(test-api-client test_api_client.cpp)
 target_link_libraries(test-api-client catch OpenBusAPIClient)
 catch_discover_tests(test-api-client)
+
+add_executable(test-authentication-flow authentication_test.cpp)
+target_link_libraries(test-authentication-flow catch OpenBusAPIClient)
+catch_discover_tests(test-authentication-flow)
