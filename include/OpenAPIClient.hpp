@@ -6,8 +6,8 @@
 
 /// C++ header for OpenAPIClient
 
-// using OpenBus::IDSettings;
-// using OpenBus::IDProvider;
-// using OpenBus::Authentication;
+// using OpenAPI::IDSettings;
+// using OpenAPI::IDProvider;
+// using OpenAPI::Authentication;
 
 #endif // OPEN_API_CLIENT_MAIN_HPP

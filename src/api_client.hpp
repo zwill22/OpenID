@@ -1,10 +1,10 @@
-#ifndef OPEN_BUS_API_CLIENT_HPP
-#define OPEN_BUS_API_CLIENT_HPP
+#ifndef OPEN_API_CLIENT_HPP
+#define OPEN_API_CLIENT_HPP
 
 #include <string>
 #include <memory>
 
-namespace OpenBus {
+namespace OpenAPI {
 
 class APIClient {
     public:
@@ -17,6 +17,6 @@ class APIClient {
 };
     
 
-} // namespace OpenBus
+} // namespace OpenAPI
 
-#endif // OPEN_BUS_API_CLIENT_HPP
+#endif // OPEN_API_CLIENT_HPP

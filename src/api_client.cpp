@@ -2,7 +2,7 @@
 
 #include <aws/core/Aws.h>
 
-namespace OpenBus {
+namespace OpenAPI {
 
 struct APIClient::Options : public Aws::SDKOptions {};
 
@@ -14,4 +14,4 @@ APIClient::~APIClient() {
     Aws::ShutdownAPI(*options);
 }
 
-} // namespace OpenBus
+} // namespace OpenAPI

@@ -3,7 +3,7 @@
 #include "api_client.hpp"
 #include "identity_provider.hpp"
 
-using namespace OpenBus;
+using namespace OpenAPI;
 
 using Catch::Matchers::ContainsSubstring;
 

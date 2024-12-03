@@ -5,12 +5,12 @@
 #include "identity_provider.hpp"
 #include "examples_settings.hpp"
 
-using namespace OpenBus;
+using namespace OpenAPI;
 
 int main() {
-    OpenBus::APIClient client;
+    APIClient client;
 
-    const auto settings = OpenBusExamples::getSettings();
+    const auto settings = OpenAPIExamples::getSettings();
     
     auto idProvider = IDProvider(settings);
     auto auth = idProvider.passwordAuthenticate();

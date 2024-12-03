@@ -5,9 +5,10 @@
 #include "identity_provider.hpp"
 #include "examples_settings.hpp"
 
-using OpenBus::IDProvider;
+using OpenAPI::APIClient;
+using OpenAPI::IDProvider;
 
-using namespace OpenBusExamples;
+using namespace OpenAPIExamples;
 
 bool getChoice(const std::string & str){
     while (true) {
@@ -47,7 +48,7 @@ void verifyUser(
 }
 
 int main() {
-    OpenBus::APIClient client;
+    APIClient client;
 
     const auto settings = getSettings();
     

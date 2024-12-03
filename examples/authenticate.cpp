@@ -5,8 +5,9 @@
 #include "identity_provider.hpp"
 #include "examples_settings.hpp"
 
-using OpenBus::IDProvider;
-using OpenBus::IDSettings;
+using OpenAPI::APIClient;
+using OpenAPI::IDProvider;
+using OpenAPI::IDSettings;
 
 void printRow(const int n = 64, const char c = '=') {
     std::cout << std::string(n, c) << '\n';
@@ -33,9 +34,9 @@ void printAuthentication(const auto & auth) {
 }
 
 int main() {
-    OpenBus::APIClient client;
+    APIClient client;
 
-    const auto settings = OpenBusExamples::getSettings();
+    const auto settings = OpenAPIExamples::getSettings();
     
     auto idProvider = IDProvider(settings);
     auto auth = idProvider.passwordAuthenticate();

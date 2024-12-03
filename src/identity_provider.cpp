@@ -13,7 +13,7 @@ using namespace Aws::Utils;
 using namespace Aws::Client;
 using namespace Aws::CognitoIdentityProvider;
 
-namespace OpenBus {
+namespace OpenAPI {
 
 template <typename Outcome, typename Request>
 auto checkOutcome(
@@ -138,4 +138,4 @@ void IDProvider::deleteUser(const Authentication & authentication) const {
     checkOutcome(outcome, request);
 }
 
-} // namespace OpenBus
+} // namespace OpenAPI

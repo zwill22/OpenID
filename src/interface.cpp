@@ -4,7 +4,7 @@
 
 #include "OpenAPIClient.hpp"
 
-using namespace OpenBus;
+using namespace OpenAPI;
 
 void *initialiseOpenAPIClient() {
     try {

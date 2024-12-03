@@ -1,11 +1,11 @@
-#ifndef OPEN_BUS_AUTHENTICATION_HPP
-#define OPEN_BUS_AUTHENTICATION_HPP
+#ifndef OPEN_API_AUTHENTICATION_HPP
+#define OPEN_API_AUTHENTICATION_HPP
 
 #include <memory>
 #include <map>
 #include <string>
 
-namespace OpenBus {
+namespace OpenAPI {
 
 struct Authentication {
     std::string accessToken;
@@ -52,6 +52,6 @@ Authentication authenticateResults(const AuthenticationResult & result) {
     return authResults;
 }
 
-} // namespace OpenBus
+} // namespace OpenAPI
 
-#endif // OPEN_BUS_AUTHENTICATION_HPP
+#endif // OPEN_API_AUTHENTICATION_HPP

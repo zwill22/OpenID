@@ -2,6 +2,6 @@
 
 #include "api_client.hpp"
 
-TEST_CASE("Test API Client") {
-    REQUIRE_NOTHROW(OpenBus::APIClient());
+TEST_CASE("Test Open API Client") {
+    REQUIRE_NOTHROW(OpenAPI::APIClient());
 }

@@ -27,7 +27,7 @@ if (C_INTERFACE)
     add_library(OpenAPICClient)
     target_link_libraries(OpenAPICClient PRIVATE OpenAPIClient)
 else()
-    message(STATUS "C_WRAPPER=OFF: C interface functions will not be built")
+    message(STATUS "C_WRAPPER=OFF: C interfaceU functions will not be built")
 endif()
 
 add_subdirectory(src)

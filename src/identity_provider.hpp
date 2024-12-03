@@ -1,12 +1,12 @@
-#ifndef OPEN_BUS_COGNITO_IDENTITY_HPP
-#define OPEN_BUS_COGNITO_IDENTITY_HPP
+#ifndef OPEN_API_IDENTITY_PROVIDER_HPP
+#define OPEN_API_IDENTITY_PROVIDER_HPP
 
 #include <string>
 #include <memory>
 
 #include "authentication.hpp"
 
-namespace OpenBus {
+namespace OpenAPI {
 
 struct IDSettings {
     std::string userID;
@@ -39,6 +39,6 @@ private:
 };
     
 
-} // namespace OpenBus
+} // namespace OpenAPI
 
-#endif // OPEN_BUS_COGNITO_IDENTITY_HPP
+#endif // OPEN_API_IDENTITY_PROVIDER_HPP
