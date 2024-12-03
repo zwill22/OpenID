@@ -93,7 +93,7 @@ bool checkResult(const ResultType & result) {
     return false;
 }
 
-AuthenticationResult IDProvider::passwordAuthenticate() const {
+Authentication IDProvider::passwordAuthenticate() const {
     Model::InitiateAuthRequest request;
 
     request.SetAuthFlow(Model::AuthFlowType::USER_AUTH);
@@ -106,7 +106,7 @@ AuthenticationResult IDProvider::passwordAuthenticate() const {
     const auto result = checkOutcome(outcome, request);
 
     if (checkResult(result)) {
-        return getResults(result.GetAuthenticationResult());
+        return authenticateResults(result.GetAuthenticationResult());
     }
 
     Model::RespondToAuthChallengeRequest selectChallengeRequest;
@@ -122,13 +122,13 @@ AuthenticationResult IDProvider::passwordAuthenticate() const {
     const auto selectChallengeOutcome = idProviderClient->RespondToAuthChallenge(selectChallengeRequest);
     const auto selectChallengeResult = checkOutcome(selectChallengeOutcome, selectChallengeRequest);
     if (checkResult(selectChallengeResult)) {
-        return getResults(selectChallengeResult.GetAuthenticationResult());
+        return authenticateResults(selectChallengeResult.GetAuthenticationResult());
     }
 
     throw std::runtime_error("User not authorised");
 }
 
-void IDProvider::deleteUser(const AuthenticationResult & authentication) const {
+void IDProvider::deleteUser(const Authentication & authentication) const {
     Model::DeleteUserRequest request;
 
     request.SetAccessToken(authentication.accessToken);

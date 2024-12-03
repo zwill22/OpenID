@@ -59,7 +59,7 @@ TEST_CASE("Test IDProvider") {
             ContainsSubstring("Incorrect username or password")
         );
 
-        AuthenticationResult fakeAuthentication;
+        Authentication fakeAuthentication;
         fakeAuthentication.accessToken = "sertyuk2i3877";
         fakeAuthentication.expiryTime = 3600;
         fakeAuthentication.idToken = "2y6rt78y2ugr2if8y920o";

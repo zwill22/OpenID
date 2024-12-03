@@ -27,9 +27,9 @@ public:
     void verifyUser(const std::string & confirmationCode) const;
     void resendCode() const;
 
-    AuthenticationResult passwordAuthenticate() const;
+    Authentication passwordAuthenticate() const;
 
-    void deleteUser(const AuthenticationResult & authentication) const;
+    void deleteUser(const Authentication & authentication) const;
 
 private:
     IDSettings settings;

@@ -7,7 +7,7 @@
 
 namespace OpenBus {
 
-struct AuthenticationResult {
+struct Authentication {
     std::string accessToken;
     size_t expiryTime;
     std::string idToken;
@@ -15,9 +15,9 @@ struct AuthenticationResult {
     std::string tokenType;
 };
 
-template <typename ResultType>
-AuthenticationResult getResults(const ResultType & result) {
-    AuthenticationResult authResults;
+template <typename AuthenticationResult>
+Authentication authenticateResults(const AuthenticationResult & result) {
+    Authentication authResults;
 
     // Access token
     if (!result.AccessTokenHasBeenSet()) {
