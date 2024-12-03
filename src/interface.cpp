@@ -30,6 +30,8 @@ IDSettings initialiseIDSettings(
     idSettings.emailAddress = emailAddress;
     idSettings.clientRegion = clientRegion;
     idSettings.clientID = clientID;
+
+    return idSettings;
 }
 
 void *initialiseOpenIDProvider(

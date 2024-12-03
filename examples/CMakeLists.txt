@@ -8,5 +8,6 @@ add_executable(DeleteUserExample delete_user.cpp)
 target_link_libraries(DeleteUserExample OpenAPIClient)
 
 if (C_INTERFACE)
-
+    add_executable(CInterfaceExample c_interface.cpp)
+    target_link_libraries(CInterfaceExample OpenAPICClient)
 endif()
