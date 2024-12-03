@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "OpenBusAPIClient.hpp"
+#include "OpenAPIClient.hpp"
 
-TEST_CASE("Test OpenBusAPIClient include") {
+TEST_CASE("Test OpenAPIClient include") {
     REQUIRE(true);
 }

@@ -7,13 +7,13 @@ target_include_directories(catch
 )
 
 add_executable(test-include test_include.cpp)
-target_link_libraries(test-include catch OpenBusAPIClient)
+target_link_libraries(test-include catch OpenAPIClient)
 catch_discover_tests(test-include)
 
 add_executable(test-api-client test_api_client.cpp)
-target_link_libraries(test-api-client catch OpenBusAPIClient)
+target_link_libraries(test-api-client catch OpenAPIClient)
 catch_discover_tests(test-api-client)
 
 add_executable(test-authentication-flow authentication_test.cpp)
-target_link_libraries(test-authentication-flow catch OpenBusAPIClient)
+target_link_libraries(test-authentication-flow catch OpenAPIClient)
 catch_discover_tests(test-authentication-flow)
