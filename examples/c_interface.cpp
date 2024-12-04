@@ -25,12 +25,7 @@ bool resend(const void* idProvider) {
     auto in = getInput("Verification failed, would you like to resend code? (y/n)");
     while (true) {
         if (equal(in, "y")) {
-            const auto resendSuccess = resendCode(idProvider);
-            if (!resendSuccess) {
-                return true;
-            } else {
-                return false;
-            }
+            return resendCode(idProvider);
         } else if (equal(in, "n")) {
             return true;
         } else {
@@ -45,22 +40,37 @@ void printInfo(
     const std::string & password,
     const std::string & emailAddress,
     const std::string & clientRegion,
-    const std::string & clientID
+    const std::string & clientID,
+    const int n = 32
 ) {
-    std::cout << std::string("=", 32) << '\n' << "User information:\n";
-    std::cout << "Username: " << userID << '\n'; 
-    std::cout << "Pasword: " << std::string("*", password.size()) << '\n'; 
-    std::cout << "E-mail: " << emailAddress << '\n'; 
-    std::cout << "Client Region: " << clientRegion << '\n'; 
-    std::cout << "Client ID: " << clientID.substr(0, 24) << '\n'; 
+    std::cout << std::string(2 * n, '=') << '\n' << "User information:\n";
+    std::cout << "Username:\t" << userID << '\n'; 
+    std::cout << "Pasword:\t" << std::string(password.size(), '*') << '\n'; 
+    std::cout << "E-mail:\t\t" << emailAddress << '\n'; 
+    std::cout << "Client Region:\t" << clientRegion << '\n'; 
+    std::cout << "Client ID:\t" << clientID.substr(0, n) << '\n'; 
+    std::cout << std::string(2 * n, '=') << '\n';
+}
+
+void printAuthentication(
+    const std::string & accessToken,
+    const int expiryTime,
+    const std::string & idToken,
+    const std::string & refreshToken,
+    const std::string & tokenType,
+    const int n = 32
+) {
+    std::cout << std::string(2 * n, '=') << '\n' << "Authentication:\n";
+    std::cout << "Access Token:\t" << accessToken.substr(0, n) << '\n'; 
+    std::cout << "Expiry Time:\t" << expiryTime << '\n'; 
+    std::cout << "ID Token:\t" << idToken.substr(0, n) << '\n'; 
+    std::cout << "Refresh Token:\t" << refreshToken.substr(0, n) << '\n'; 
+    std::cout << "Token Type:\t" << tokenType << '\n'; 
+    std::cout << std::string(2 * n, '=') << '\n';
 }
 
 int main() {
-    //const std::string clientID = "59lgg6i7hcnv8kma81rn4i7qbr";
-    //const std::string clientRegion = "eu-west-2"; 
-
     // ID settings, ensure these exist for the entirety of the program
-
     const auto userID = getInput("Enter User Name");
     const auto password = getInput("Enter password");
     const auto emailAddress = getInput("Enter E-mail address");
@@ -94,27 +104,50 @@ int main() {
     while (!verifyUserSuccess) {
         const bool resendSuccess = resend(idProvider);
         if (!resendSuccess) {
-            return 3;
+            return 2;
         }
         const auto newCode = getInput("Reinput Verification code");
         verifyUserSuccess = verifyUser(idProvider, newCode.c_str());
     }
 
     std::cout << "User verified, requesting authentication credentials...\n";
-    const auto authentication = authenticate(idProvider);
+    auto authentication = authenticate(idProvider);
     if (authentication == nullptr) {
-        return 4;
+        return 1;
     }
 
-    // TODO Expose authentication members
+    std::cout << "Acquiring tokens..." << '\n';
+    // Get authentication credentials from pointer
+    const auto accessToken = getAccessToken(authentication);
+    if (accessToken == nullptr) {
+        return 1;
+    }
+    const auto expiryTime = getExpiryTime(authentication);
+    if (expiryTime == 0) {
+        return 1;
+    }
+    const auto idToken = getIDToken(authentication);
+    if (idToken == nullptr) {
+        return 1;
+    }
+    const auto refreshToken = getRefreshToken(authentication);
+    if (refreshToken == nullptr) {
+        return 1;
+    }
+    const auto tokenType = getTokenType(authentication);
+    if (tokenType == nullptr) {
+        return 1;
+    }
 
     std::cout << "User authenticated!\n";
+    printAuthentication(accessToken, expiryTime, idToken, refreshToken, tokenType);
+
     while (true) {
         const auto del = getInput("Delete profile? (y/n)");
         if (equal(del, "y")) {
             const auto deleteUserSuccess = deleteUser(idProvider, authentication);
             if (!deleteUserSuccess) {
-                return 5;
+                return 2;
             } else {
                 std::cout << "User deleted\n";
                 return 0;

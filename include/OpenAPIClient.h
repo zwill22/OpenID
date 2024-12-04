@@ -26,6 +26,12 @@ bool resendCode(const void * idProviderPtr);
 
 void* authenticate(const void * idProviderPtr);
 
+char* getAccessToken(void * authenticationPtr);
+int getExpiryTime(void * authenticationPtr);
+char* getIDToken(void * authenticationPtr);
+char* getRefreshToken(void * authenticationPtr);
+char* getTokenType(void * authenticationPtr);
+
 bool deleteUser(const void * idProviderPtr, const void * authenticationPtr);
 
 #ifdef __cplusplus
