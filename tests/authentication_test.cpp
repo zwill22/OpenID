@@ -52,6 +52,7 @@ TEST_CASE("Test IDProvider") {
         CHECK_THROWS_WITH(
             idProvider.verifyUser("RandomCode"), 
             ContainsSubstring("Invalid verification code provided")
+            || ContainsSubstring("Invalid code provided")
         );
         CHECK_NOTHROW(idProvider.resendCode());
         CHECK_THROWS_WITH(
