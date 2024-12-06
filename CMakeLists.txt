@@ -19,7 +19,7 @@ target_link_libraries(OpenAPIClient PRIVATE ${AWSSDK_LINK_LIBRARIES})
 target_include_directories(OpenAPIClient PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 if (NOT DEFINED C_INTERFACE)
-    set(C_WRAPPER OFF)
+    set(C_INTERFACE OFF)
 endif()
 
 if (C_INTERFACE)
