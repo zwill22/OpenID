@@ -1,12 +1,12 @@
-#ifndef OPEN_API_EXAMPLES_SETTINGS_HPP
-#define OPEN_API_EXAMPLES_SETTINGS_HPP
+#ifndef OPEN_ID_EXAMPLE_SETTINGS_HPP
+#define OPEN_ID_EXAMPLE_SETTINGS_HPP
 
 #include <iostream>
 #include <string>
 
-#include "identity_provider.hpp"
+#include "IdentityProvider.hpp"
 
-namespace OpenAPIExamples {
+namespace OpenID::Examples {
 
 std::string getInput(
     const std::string & str,
@@ -19,8 +19,8 @@ std::string getInput(
     return input;
 }
 
-OpenAPI::IDSettings getSettings() {
-    OpenAPI::IDSettings settings;
+OpenID::IDSettings getSettings() {
+    OpenID::IDSettings settings;
     settings.clientID = "59lgg6i7hcnv8kma81rn4i7qbr";
     settings.clientRegion = "eu-west-2";
     settings.userID = getInput("Enter User Name");
@@ -32,4 +32,4 @@ OpenAPI::IDSettings getSettings() {
 
 }
 
-#endif // OPEN_API_EXAMPLES_SETTINGS_HPP
+#endif // OPEN_ID_EXAMPLE_SETTINGS_HPP

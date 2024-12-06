@@ -1,14 +1,11 @@
 #include <string>
 #include <iostream>
 
-#include "api_client.hpp"
-#include "identity_provider.hpp"
-#include "examples_settings.hpp"
+#include "OpenID.hpp"
+#include "ExampleSettings.hpp"
 
-using OpenAPI::APIClient;
-using OpenAPI::IDProvider;
-
-using namespace OpenAPIExamples;
+using namespace OpenID;
+using namespace OpenID::Examples;
 
 bool getChoice(const std::string & str){
     while (true) {

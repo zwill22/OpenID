@@ -1,16 +1,15 @@
 #include <string>
 #include <iostream>
 
-#include "api_client.hpp"
-#include "identity_provider.hpp"
-#include "examples_settings.hpp"
+#include "OpenID.hpp"
+#include "ExampleSettings.hpp"
 
-using namespace OpenAPI;
+using namespace OpenID;
 
 int main() {
     APIClient client;
 
-    const auto settings = OpenAPIExamples::getSettings();
+    const auto settings = OpenID::Examples::getSettings();
     
     auto idProvider = IDProvider(settings);
     auto auth = idProvider.passwordAuthenticate();

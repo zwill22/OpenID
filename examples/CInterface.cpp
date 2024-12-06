@@ -1,6 +1,6 @@
 /// An example C++ application which uses the C interface rather than C++ interface
 
-#include "OpenAPIClient.h"
+#include "OpenID.h"
 
 #include <string>
 #include <iostream>
@@ -80,7 +80,7 @@ int main() {
     printInfo(userID, password, emailAddress, clientRegion, clientID);
 
     // Initialise API client
-    const auto apiClient = initialiseOpenAPIClient();
+    const auto apiClient = initialiseOpenIDClient();
 
     // Initialise ID Provider
     const auto idProvider = initialiseOpenIDProvider(

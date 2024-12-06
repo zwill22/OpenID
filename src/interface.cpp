@@ -1,12 +1,12 @@
-#include "OpenAPIClient.h"
+#include "OpenID.h"
 
 #include <iostream>
 
-#include "OpenAPIClient.hpp"
+#include "OpenID.hpp"
 
-using namespace OpenAPI;
+using namespace OpenID;
 
-void *initialiseOpenAPIClient() {
+void *initialiseOpenIDClient() {
     try {
         APIClient* apiClient = new APIClient();
 

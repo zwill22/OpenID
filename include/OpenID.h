@@ -1,16 +1,16 @@
-#ifndef OPEN_API_C_INTERFACE_H
-#define OPEN_API_C_INTERFACE_H
+#ifndef OPEN_ID_H
+#define OPEN_ID_H
 
 #include <stdbool.h>
 
-// C-header for OpenAPIClient library
+// C-header for OpenID library
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
 
-void* initialiseOpenAPIClient();
+void* initialiseOpenIDClient();
 
 void* initialiseOpenIDProvider(
     const char * userID,
@@ -38,4 +38,4 @@ bool deleteUser(const void * idProviderPtr, const void * authenticationPtr);
 }
 #endif // __cplusplus
 
-#endif // OPEN_API_C_INTERFACE_H
+#endif // OPEN_ID_H

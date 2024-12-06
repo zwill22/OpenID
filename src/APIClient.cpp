@@ -1,8 +1,8 @@
-#include "api_client.hpp"
+#include "APIClient.hpp"
 
 #include <aws/core/Aws.h>
 
-namespace OpenAPI {
+namespace OpenID {
 
 struct APIClient::Options : public Aws::SDKOptions {};
 
@@ -14,4 +14,4 @@ APIClient::~APIClient() {
     Aws::ShutdownAPI(*options);
 }
 
-} // namespace OpenAPI
+} // namespace OpenID

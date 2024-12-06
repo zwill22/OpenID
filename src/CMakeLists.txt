@@ -1,14 +1,14 @@
-target_include_directories(OpenAPIClient PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(OpenID PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_sources(
-    OpenAPIClient PRIVATE
-    api_client.cpp
-    identity_provider.cpp
+    OpenID PRIVATE
+    APIClient.cpp
+    IdentityProvider.cpp
 )
 
 if (C_INTERFACE)
     target_sources(
-        OpenAPICClient PRIVATE
-        interface.cpp
+        OpenIDC PRIVATE
+        Interface.cpp
     )
 endif()

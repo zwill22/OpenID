@@ -1,10 +1,10 @@
-#ifndef OPEN_API_CLIENT_HPP
-#define OPEN_API_CLIENT_HPP
+#ifndef OPEN_ID_API_CLIENT_HPP
+#define OPEN_ID_API_CLIENT_HPP
 
 #include <string>
 #include <memory>
 
-namespace OpenAPI {
+namespace OpenID {
 
 class APIClient {
     public:
@@ -17,6 +17,6 @@ class APIClient {
 };
     
 
-} // namespace OpenAPI
+} // namespace OpenID
 
-#endif // OPEN_API_CLIENT_HPP
+#endif // OPEN_ID_API_CLIENT_HPP

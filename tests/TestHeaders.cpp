@@ -1,11 +1,11 @@
-#include "catch.hpp"
+#include "Catch.hpp"
 
-#include "OpenAPIClient.h"
-#include "OpenAPIClient.hpp"
+#include "OpenID.h"
+#include "OpenID.hpp"
 
 #include <iostream>
 
-using namespace OpenAPI;
+using namespace OpenID;
 
 void* getAuthenticationCPtr(const Authentication & authentication) {
     return (void *) &authentication;

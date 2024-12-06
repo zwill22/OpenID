@@ -1,9 +1,8 @@
-#include "catch.hpp"
+#include "Catch.hpp"
 
-#include "api_client.hpp"
-#include "identity_provider.hpp"
+#include "OpenID.hpp"
 
-using namespace OpenAPI;
+using namespace OpenID;
 
 using Catch::Matchers::ContainsSubstring;
 

@@ -1,6 +1,6 @@
-#include "catch.hpp"
+#include "Catch.hpp"
 
-#include "OpenAPIClient.hpp"
+#include "OpenID.hpp"
 
 TEST_CASE("Test OpenAPIClient include") {
     REQUIRE(true);

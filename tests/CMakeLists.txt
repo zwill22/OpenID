@@ -1,4 +1,4 @@
-add_library(catch SHARED catch.hpp)
+add_library(catch SHARED Catch.hpp)
 target_link_libraries(catch Catch2::Catch2WithMain)
 target_include_directories(catch
         INTERFACE
@@ -6,20 +6,20 @@ target_include_directories(catch
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>
 )
 
-add_executable(test-include test_include.cpp)
-target_link_libraries(test-include catch OpenAPIClient)
-catch_discover_tests(test-include)
+add_executable(TestInclude TestInclude.cpp)
+target_link_libraries(TestInclude catch OpenID)
+catch_discover_tests(TestInclude)
 
-add_executable(test-api-client test_api_client.cpp)
-target_link_libraries(test-api-client catch OpenAPIClient)
-catch_discover_tests(test-api-client)
+add_executable(TestAPIClient TestAPIClient.cpp)
+target_link_libraries(TestAPIClient catch OpenID)
+catch_discover_tests(TestAPIClient)
 
-add_executable(test-authentication-flow test_authentication.cpp)
-target_link_libraries(test-authentication-flow catch OpenAPIClient)
-catch_discover_tests(test-authentication-flow)
+add_executable(TestAuthenticationFlow TestAuthentication.cpp)
+target_link_libraries(TestAuthenticationFlow catch OpenID)
+catch_discover_tests(TestAuthenticationFlow)
 
 if (C_INTERFACE)
-add_executable(test-header-consistency test_headers.cpp)
-target_link_libraries(test-header-consistency catch OpenAPIClient OpenAPICClient)
-catch_discover_tests(test-header-consistency)
+add_executable(TestHeaderConsistency TestHeaders.cpp)
+target_link_libraries(TestHeaderConsistency catch OpenID OpenIDC)
+catch_discover_tests(TestHeaderConsistency)
 endif()

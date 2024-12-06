@@ -1,11 +1,11 @@
-#ifndef OPEN_API_AUTHENTICATION_HPP
-#define OPEN_API_AUTHENTICATION_HPP
+#ifndef OPEN_ID_AUTHENTICATION_HPP
+#define OPEN_ID_AUTHENTICATION_HPP
 
 #include <memory>
 #include <map>
 #include <string>
 
-namespace OpenAPI {
+namespace OpenID {
 
 struct Authentication {
     std::string accessToken;
@@ -52,6 +52,6 @@ Authentication authenticateResults(const AuthenticationResult & result) {
     return authResults;
 }
 
-} // namespace OpenAPI
+} // namespace OpenID
 
-#endif // OPEN_API_AUTHENTICATION_HPP
+#endif // OPEN_ID_AUTHENTICATION_HPP

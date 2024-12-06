@@ -1,13 +1,12 @@
 #include <string>
 #include <iostream>
 
-#include "api_client.hpp"
-#include "identity_provider.hpp"
-#include "examples_settings.hpp"
+#include "OpenID.hpp"
+#include "ExampleSettings.hpp"
 
-using OpenAPI::APIClient;
-using OpenAPI::IDProvider;
-using OpenAPI::IDSettings;
+using OpenID::APIClient;
+using OpenID::IDProvider;
+using OpenID::IDSettings;
 
 void printRow(const int n = 64, const char c = '=') {
     std::cout << std::string(n, c) << '\n';
@@ -36,7 +35,7 @@ void printAuthentication(const auto & auth) {
 int main() {
     APIClient client;
 
-    const auto settings = OpenAPIExamples::getSettings();
+    const auto settings = OpenID::Examples::getSettings();
     
     auto idProvider = IDProvider(settings);
     auto auth = idProvider.passwordAuthenticate();

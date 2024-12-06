@@ -1,4 +1,4 @@
-#include "identity_provider.hpp"
+#include "IdentityProvider.hpp"
 
 #include <aws/core/Aws.h>
 #include <aws/cognito-idp/CognitoIdentityProviderClient.h>
@@ -13,7 +13,7 @@ using namespace Aws::Utils;
 using namespace Aws::Client;
 using namespace Aws::CognitoIdentityProvider;
 
-namespace OpenAPI {
+namespace OpenID {
 
 template <typename Outcome, typename Request>
 auto checkOutcome(
@@ -138,4 +138,4 @@ void IDProvider::deleteUser(const Authentication & authentication) const {
     checkOutcome(outcome, request);
 }
 
-} // namespace OpenAPI
+} // namespace OpenID

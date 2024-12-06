@@ -1,12 +1,12 @@
-#ifndef OPEN_API_IDENTITY_PROVIDER_HPP
-#define OPEN_API_IDENTITY_PROVIDER_HPP
+#ifndef OPEN_ID_IDENTITY_PROVIDER_HPP
+#define OPEN_ID_IDENTITY_PROVIDER_HPP
 
 #include <string>
 #include <memory>
 
-#include "authentication.hpp"
+#include "Authentication.hpp"
 
-namespace OpenAPI {
+namespace OpenID {
 
 struct IDSettings {
     std::string userID;
@@ -39,6 +39,6 @@ private:
 };
     
 
-} // namespace OpenAPI
+} // namespace OpenID
 
-#endif // OPEN_API_IDENTITY_PROVIDER_HPP
+#endif // OPEN_ID_IDENTITY_PROVIDER_HPP
