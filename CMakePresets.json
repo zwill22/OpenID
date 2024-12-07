@@ -50,6 +50,21 @@
                 "BUILD_EXAMPLES": "ON",
                 "C_INTERFACE": "ON"
             }
+        },
+        {
+            "name": "iOS_Static_Build",
+            "displayName": "IOSStaticBuild",
+            "description": "Build iOS release version with clang++",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_EXAMPLES": "OFF",
+                "USE_CATCH": "OFF",
+                "C_INTERFACE": "ON",
+                "IOS_BUILD": "ON"
+            }
         }
     ]
 }
