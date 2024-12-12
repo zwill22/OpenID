@@ -52,19 +52,77 @@
             }
         },
         {
-            "name": "iOS_Static_Build",
-            "displayName": "IOSStaticBuild",
-            "description": "Build iOS release version with clang++",
+            "name": "iOSBuild",
+            "displayName": "iOS64Build",
+            "description": "Build OS64 release version with clang++",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "toolchainFile": "${sourceParentDir}/ios-cmake/ios.toolchain.cmake",
+            "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "OFF",
                 "BUILD_EXAMPLES": "OFF",
                 "USE_CATCH": "OFF",
                 "C_INTERFACE": "ON",
-                "IOS_BUILD": "ON"
+                "PLATFORM": "OS64",
+                "DEPLOYMENT_TARGET": "18.2",
+                "AWSSDK_ROOT_DIR": "${sourceParentDir}/aws-sdk-cpp/build/install/OS64"
             }
+        },
+        {
+            "name": "iOSSimulatorBuild",
+            "displayName": "iOSSIMULATORARM64Build",
+            "description": "Build SIMULATORARM64 release version with clang++",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "toolchainFile": "${sourceParentDir}/ios-cmake/ios.toolchain.cmake",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "OFF",
+                "BUILD_EXAMPLES": "OFF",
+                "USE_CATCH": "OFF",
+                "C_INTERFACE": "ON",
+                "PLATFORM": "SIMULATORARM64",
+                "DEPLOYMENT_TARGET": "18.2",
+                "AWSSDK_ROOT_DIR": "${sourceParentDir}/aws-sdk-cpp/build/install/SIMULATORARM64"
+            }
+        }
+
+    ],
+    "buildPresets": [
+        {
+            "name": "Clang_Debug",
+            "displayName": "ClangDebug",
+            "configurePreset": "Clang_Debug"
+        },
+        {
+            "name": "Clang_Debug_with_Examples",
+            "displayName": "ClangDebugWithExamples",
+            "configurePreset": "Clang_Debug_with_Examples"
+        },
+        {
+            "name": "Clang_Release",
+            "displayName": "ClangRelease",
+            "configurePreset": "Clang_Release"
+        },
+        {
+            "name": "Clang_Release_with_Examples",
+            "displayName": "ClangReleaseWithExamples",
+            "configurePreset": "Clang_Release_with_Examples"
+        },
+        {
+            "name": "iOSBuild",
+            "displayName": "iOS64Build",
+            "configurePreset": "iOSBuild"
+        },
+        {
+            "name": "iOSSimulatorBuild",
+            "displayName": "iOSSIMULATORARM64Build",
+            "configurePreset": "iOSSimulatorBuild"
         }
     ]
 }

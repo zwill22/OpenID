@@ -12,8 +12,6 @@ message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
-include(iOS)
-
 find_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})
 
 add_library(OpenID)
