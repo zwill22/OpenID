@@ -17,6 +17,10 @@ void *initialiseOpenIDClient() {
     }
 }
 
+size_t openIDClientSize() {
+    return sizeof(APIClient);
+}
+
 IDSettings initialiseIDSettings(
     const char *userID,
     const char *password,
@@ -53,6 +57,10 @@ void *initialiseOpenIDProvider(
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }
+}
+
+size_t idProviderSize() {
+    return sizeof(IDProvider);
 }
 
 bool signUpUser(const void *idProviderPtr) {
@@ -104,6 +112,10 @@ void *authenticate(const void *idProviderPtr) {
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }
+}
+
+size_t authenticationSize() {
+    return sizeof(Authentication);
 }
 
 char* getAccessToken(void * authenticationPtr) {

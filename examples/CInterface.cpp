@@ -80,10 +80,12 @@ int main() {
     printInfo(userID, password, emailAddress, clientRegion, clientID);
 
     // Initialise API client
-    const auto apiClient = initialiseOpenIDClient();
+    void * apiClient = alloca(openIDClientSize());
+    apiClient = initialiseOpenIDClient();
 
     // Initialise ID Provider
-    const auto idProvider = initialiseOpenIDProvider(
+    void * idProvider = alloca(idProviderSize());
+    idProvider = initialiseOpenIDProvider(
         userID.c_str(), password.c_str(), emailAddress.c_str(), clientRegion.c_str(), clientID.c_str()
     );
     if (idProvider == nullptr) {
@@ -111,7 +113,8 @@ int main() {
     }
 
     std::cout << "User verified, requesting authentication credentials...\n";
-    auto authentication = authenticate(idProvider);
+    void * authentication = alloca(authenticationSize());
+    authentication = authenticate(idProvider);
     if (authentication == nullptr) {
         return 1;
     }

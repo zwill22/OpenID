@@ -2,6 +2,7 @@
 #define OPEN_ID_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 // C-header for OpenID library
 
@@ -11,6 +12,7 @@ extern "C" {
 
 
 void* initialiseOpenIDClient();
+size_t openIDClientSize();
 
 void* initialiseOpenIDProvider(
     const char * userID,
@@ -19,12 +21,14 @@ void* initialiseOpenIDProvider(
     const char * clientRegion,
     const char * clientID
 );
+size_t idProviderSize();
 
 bool signUpUser(const void * idProviderPtr);
 bool verifyUser(const void * idProviderPtr, const char * confirmationCode);
 bool resendCode(const void * idProviderPtr);
 
 void* authenticate(const void * idProviderPtr);
+size_t authenticationSize();
 
 char* getAccessToken(void * authenticationPtr);
 int getExpiryTime(void * authenticationPtr);
