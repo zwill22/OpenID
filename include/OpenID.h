@@ -10,11 +10,11 @@
 extern "C" {
 #endif // __cplusplus
 
-
-void* initialiseOpenIDClient();
+bool initialiseOpenIDClient(void* openIDClient);
 size_t openIDClientSize();
 
-void* initialiseOpenIDProvider(
+bool initialiseOpenIDProvider(
+    void * idProvider,
     const char * userID,
     const char * password,
     const char * emailAddress,
@@ -27,7 +27,7 @@ bool signUpUser(const void * idProviderPtr);
 bool verifyUser(const void * idProviderPtr, const char * confirmationCode);
 bool resendCode(const void * idProviderPtr);
 
-void* authenticate(const void * idProviderPtr);
+bool authenticate(void* authentication, void * idProviderPtr);
 size_t authenticationSize();
 
 char* getAccessToken(void * authenticationPtr);

@@ -81,15 +81,27 @@ int main() {
 
     // Initialise API client
     void * apiClient = alloca(openIDClientSize());
-    apiClient = initialiseOpenIDClient();
+    {
+        const auto success = initialiseOpenIDClient(apiClient);
+        if (!success) {
+            return 1;
+        }
+    }
 
     // Initialise ID Provider
     void * idProvider = alloca(idProviderSize());
-    idProvider = initialiseOpenIDProvider(
-        userID.c_str(), password.c_str(), emailAddress.c_str(), clientRegion.c_str(), clientID.c_str()
-    );
-    if (idProvider == nullptr) {
-        return 1;
+    {
+        const auto success = initialiseOpenIDProvider(
+            idProvider,
+            userID.c_str(),
+            password.c_str(),
+            emailAddress.c_str(),
+            clientRegion.c_str(),
+            clientID.c_str()
+        );
+        if (!success) {
+            return 1;
+        }
     }
 
     // Attempt to sign up a user
@@ -114,9 +126,11 @@ int main() {
 
     std::cout << "User verified, requesting authentication credentials...\n";
     void * authentication = alloca(authenticationSize());
-    authentication = authenticate(idProvider);
-    if (authentication == nullptr) {
-        return 1;
+    {
+        const auto success = authenticate(authentication, idProvider);
+        if (!success) {
+            return 1;
+        }
     }
 
     std::cout << "Acquiring tokens..." << '\n';

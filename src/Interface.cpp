@@ -6,14 +6,12 @@
 
 using namespace OpenID;
 
-void *initialiseOpenIDClient() {
+bool initialiseOpenIDClient(void* openIDClient) {
     try {
-        APIClient* apiClient = new APIClient();
-
-        return (void *) apiClient;
+        new (openIDClient) APIClient();
+        return true;
     } catch (std::runtime_error e) {
-        std::cerr << "Error: " << e.what() << '\n';
-        return nullptr;
+        return false;
     }
 }
 
@@ -38,7 +36,8 @@ IDSettings initialiseIDSettings(
     return idSettings;
 }
 
-void *initialiseOpenIDProvider(
+bool initialiseOpenIDProvider(
+    void * idProvider,
     const char *userID,
     const char *password,
     const char *emailAddress,
@@ -50,12 +49,10 @@ void *initialiseOpenIDProvider(
             userID, password, emailAddress, clientRegion, clientID
         );
 
-        IDProvider* idProvider = new IDProvider(idSettings);
-
-        return (void *) idProvider;
+        new (idProvider) IDProvider(idSettings);
+        return true;
     } catch (std::runtime_error e) {
-        std::cerr << "Error: " << e.what() << '\n';
-        return nullptr;
+        return false;
     }
 }
 
@@ -100,17 +97,16 @@ bool resendCode(const void *idProviderPtr) {
     }
 }
 
-void *authenticate(const void *idProviderPtr) {
+bool authenticate(void * authentication, void *idProviderPtr) {
     try {
         const IDProvider* idProvider = (IDProvider*) idProviderPtr;
+        Authentication* authenticator = (Authentication*) authentication;
+        *authenticator = idProvider->passwordAuthenticate();
 
-        Authentication* authentication = new Authentication;
-        *authentication = idProvider->passwordAuthenticate();
-
-        return (void *) authentication;
+        return true;
     } catch (std::runtime_error e) {
         std::cerr << "Error: " << e.what() << '\n';
-        return nullptr;
+        return false;
     }
 }
 
