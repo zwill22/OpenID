@@ -11,6 +11,7 @@ extern "C" {
 #endif // __cplusplus
 
 bool initialiseOpenIDClient(void* openIDClient);
+bool uninitialiseOpenIDClient(void* openIDClient);
 size_t openIDClientSize();
 
 bool initialiseOpenIDProvider(
@@ -21,6 +22,7 @@ bool initialiseOpenIDProvider(
     const char * clientRegion,
     const char * clientID
 );
+bool uninitialiseOpenIDProvider(void* idProvider);
 size_t idProviderSize();
 
 bool signUpUser(const void * idProviderPtr);

@@ -10,7 +10,21 @@ bool initialiseOpenIDClient(void* openIDClient) {
     try {
         new (openIDClient) APIClient();
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::exception & e) {
+        std::cerr << "Error: " << e.what() << '\n';
+        return false;
+    }
+}
+bool uninitialiseOpenIDClient(void* openIDClient) {
+    try {
+        const APIClient* apiClient = (APIClient*) openIDClient;
+
+        apiClient->~APIClient();
+
+        return true;
+    } catch (const std::exception & e) {
+        std::exception_ptr p = std::current_exception();
+        std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
 }
@@ -51,7 +65,20 @@ bool initialiseOpenIDProvider(
 
         new (idProvider) IDProvider(idSettings);
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
+        std::cerr << "Error: " << e.what() << '\n';
+        return false;
+    }
+}
+bool uninitialiseOpenIDProvider(void* idProvider) {
+    try {
+        const IDProvider* identityProvider = (IDProvider*) idProvider;
+
+        identityProvider->~IDProvider();
+
+        return true;
+    } catch (const std::exception & e) {
+        std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
 }
@@ -65,7 +92,7 @@ bool signUpUser(const void *idProviderPtr) {
         const IDProvider* idProvider = (IDProvider*) idProviderPtr;
         idProvider->signUpUser();
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
@@ -80,7 +107,7 @@ bool verifyUser(
 
         idProvider->verifyUser(confirmationCode);
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
@@ -91,7 +118,7 @@ bool resendCode(const void *idProviderPtr) {
         const IDProvider* idProvider = (IDProvider*) idProviderPtr;
         idProvider->resendCode();
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
@@ -104,7 +131,7 @@ bool authenticate(void * authentication, void *idProviderPtr) {
         *authenticator = idProvider->passwordAuthenticate();
 
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error &e) {
         std::cerr << "Error: " << e.what() << '\n';
         return false;
     }
@@ -118,7 +145,7 @@ char* getAccessToken(void * authenticationPtr) {
     try {
         Authentication* authentication = (Authentication*) authenticationPtr;
         return authentication->accessToken.data();
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error &e) {
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }
@@ -128,7 +155,7 @@ int getExpiryTime(void * authenticationPtr) {
     try {
         Authentication* authentication = (Authentication*) authenticationPtr;
         return authentication->expiryTime;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return 0;
     }
@@ -138,7 +165,7 @@ char* getIDToken(void * authenticationPtr) {
     try {
         Authentication* authentication = (Authentication*) authenticationPtr;
         return authentication->idToken.data();
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }
@@ -148,7 +175,7 @@ char* getRefreshToken(void * authenticationPtr) {
     try {
         Authentication* authentication = (Authentication*) authenticationPtr;
         return authentication->refreshToken.data();
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }
@@ -158,7 +185,7 @@ char* getTokenType(void * authenticationPtr) {
     try {
         Authentication* authentication = (Authentication*) authenticationPtr;
         return authentication->tokenType.data();
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return nullptr;
     }   
@@ -173,7 +200,7 @@ bool deleteUser(const void *idProviderPtr, const void *authenticationPtr)
         idProvider->deleteUser(*authentication);
 
         return true;
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error & e) {
         std::cerr << "Error: " << e.what() << '\n';
         return false;
     }

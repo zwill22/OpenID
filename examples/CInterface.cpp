@@ -176,4 +176,9 @@ int main() {
             std::cout << "Invalid input: " << del << '\n';
         }
     }
+
+    uninitialiseOpenIDClient(apiClient);
+    uninitialiseOpenIDProvider(idProvider);
+    delete apiClient;
+    delete idProvider;
 }
