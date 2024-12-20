@@ -177,8 +177,16 @@ int main() {
         }
     }
 
-    uninitialiseOpenIDClient(apiClient);
-    uninitialiseOpenIDProvider(idProvider);
-    delete apiClient;
-    delete idProvider;
+    if (!uninitialiseOpenIDClient(apiClient)) {
+        return 3;
+    }
+    if (!uninitialiseOpenIDProvider(idProvider)) {
+        return 3;
+    }
+
+    free(apiClient);
+    free(idProvider);
+    free(authentication);
+    
+    return 0;
 }
