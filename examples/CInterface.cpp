@@ -6,33 +6,13 @@
 #include <iostream>
 
 std::string getInput(
-    const std::string & str,
-    const int streamSize = 64
+    const std::string & str
 ) {
     std::cout << str << ": ";
     std::string input;
-    getline(std::cin, input);
+    std::cin >> input;
 
     return input;
-}
-
-bool equal(const std::string & str1, const std::string & str2) {
-    return (str1 == str2);
-}
-
-
-bool resend(const void* idProvider) {
-    auto in = getInput("Verification failed, would you like to resend code? (y/n)");
-    while (true) {
-        if (equal(in, "y")) {
-            return resendCode(idProvider);
-        } else if (equal(in, "n")) {
-            return true;
-        } else {
-            std::cout << "Invalid option: " << in << '\n';
-            in = getInput("Would you like to resend code? (y/n)");
-        }
-    }
 }
 
 void printInfo(
@@ -69,13 +49,123 @@ void printAuthentication(
     std::cout << std::string(2 * n, '=') << '\n';
 }
 
+void printMenu() {
+    constexpr int n = 32;
+
+    std::cout << std::string(2 * n, '=') << '\n' << "OpenID Interface\n";
+    std::cout << "Choose option:" << '\n';
+    std::cout << "1:\tSign-Up" << '\n';
+    std::cout << "2:\tVerify User" << '\n';
+    std::cout << "3:\tResend Verification Code" << '\n';
+    std::cout << "4:\tRequest Authentication" << '\n';
+    std::cout << "5:\tPrint Authentication" << '\n';
+    std::cout << "6:\tDelete User" << '\n';
+    std::cout << "0:\tExit" << '\n';
+    std::cout << std::string(2 * n, '=') << '\n';
+}
+
+void signUp(const void * idProvider, const std::string & emailAddress) {
+    if(signUpUser(idProvider)) {
+    std::cout << "User signed-up successfully\n"
+        << "Verification code e-mailed to: " << emailAddress << '\n';
+    } else {
+        std::cerr << "OpenID Sign-up error, please try again..." << '\n';
+    }
+}
+
+void verify(const void * idProvider) {
+    
+    const std::string code = getInput("Input verification code");
+
+    if (verifyUser(idProvider, code.c_str())) {
+        std::cout << "User successfully verified" << '\n';
+    } else {
+        std::cerr << "User verification failure" << '\n';
+    }
+}
+
+void resend(const void * idProvider) {
+    if (resendCode(idProvider)) {
+        std::cout << "New verification code sent" << '\n';
+    } else {
+        std::cerr << "Resend verification code failure" << '\n';
+    }
+}
+
+bool requestAuthentication(void * idProvider, void * authentication) {
+    if (authenticate(authentication, idProvider)) {
+        std::cout << "User authenticated" << '\n';
+        return true;
+    } else {
+        std::cerr << "User authentication failure" << '\n';
+        return false;
+    }
+}
+
+void printAuthentication(void * authentication) {
+    std::cout << "Acquiring tokens..." << '\n';
+    // Get authentication credentials from pointer
+    const auto accessToken = getAccessToken(authentication);
+    if (accessToken == nullptr) {
+        std::cerr << "OpenID AccessToken retrieval error" << '\n';
+        return;
+    }
+    const auto expiryTime = getExpiryTime(authentication);
+    if (expiryTime == 0) {
+        std::cerr << "OpenID expiryTime retrieval error" << '\n';
+        return;
+    }
+    const auto idToken = getIDToken(authentication);
+    if (idToken == nullptr) {
+        std::cerr << "OpenID IDToken retrieval error" << '\n';
+        return;
+    }
+    const auto refreshToken = getRefreshToken(authentication);
+    if (refreshToken == nullptr) {
+        std::cerr << "OpenID RefreshToken retrieval error" << '\n';
+        return;
+    }
+    const auto tokenType = getTokenType(authentication);
+    if (tokenType == nullptr) {
+        std::cerr << "OpenID TokenType retrieval error" << '\n';
+        return;
+    }
+
+    printAuthentication(accessToken, expiryTime, idToken, refreshToken, tokenType);
+}
+
+void requestDeletion(void * idProvider, void * authentication) {
+    char del;
+    std::cout << "Delete profile? (y/n): ";
+    std::cin >> del;
+    std::cout << '\n';
+    switch (del)
+    {
+    case 'y':
+        if(deleteUser(idProvider, authentication)) {
+            std::cout << "User successfully deleted" << '\n';
+        } else {
+            std::cerr << "User deletion error" << '\n';
+        }
+        break;
+    case 'n':
+        std::cout << "User deletion cancelled" << '\n';
+        break;
+    default:
+        std::cout << "Invalid input" << '\n';
+        break;
+    }
+}
+
 int main() {
+    std::cout << "Welcome to the OpenID Interface" << '\n';
+    const auto clientRegion = getInput("Enter Client region");
+    const auto clientID = getInput("Enter Client ID");
+
     // ID settings, ensure these exist for the entirety of the program
     const auto userID = getInput("Enter User Name");
     const auto password = getInput("Enter password");
     const auto emailAddress = getInput("Enter E-mail address");
-    const auto clientRegion = getInput("Enter Client region");
-    const auto clientID = getInput("Enter Client ID");
 
     printInfo(userID, password, emailAddress, clientRegion, clientID);
 
@@ -84,6 +174,7 @@ int main() {
     {
         const auto success = initialiseOpenIDClient(apiClient);
         if (!success) {
+            std::cerr << "OpenID Client initialisation failure" << '\n';
             return 1;
         }
     }
@@ -100,93 +191,71 @@ int main() {
             clientID.c_str()
         );
         if (!success) {
+            std::cerr << "OpenID IDProvider initialisation failure" << '\n';
             return 1;
         }
     }
 
-    // Attempt to sign up a user
-    const auto signUpSuccess = signUpUser(idProvider);
-    if (!signUpSuccess) {
+    void * authentication = alloca(authenticationSize());
+    bool authenticated = false;
+
+    bool menu = true;
+    while (menu)
+    {
+        printMenu();
+        char choice;
+        std::cout << "Enter Choice: ";
+        std::cin >> choice;
+        std::cout << '\n';
+        switch (choice)
+        {
+        case '1':
+            signUp(idProvider, emailAddress);
+            break;
+        case '2':
+            verify(idProvider);
+            break;
+        case '3':
+            resend(idProvider);
+            break;
+        case '4':
+            authenticated = requestAuthentication(idProvider, authentication);
+            break;
+        case '5':
+            if (authenticated) {
+                printAuthentication(authentication);
+            } else {
+                std::cout << "User not authenticated" << '\n';
+            }
+            break;
+        case '6':
+            if (authenticated) {
+                requestDeletion(idProvider, authentication);
+            } else {
+                std::cout << "User not authenticated" << '\n';
+            }
+            break;
+        case '0':
+            std::cout << "Shutting down OpenID interface..." << '\n';
+            menu = false;
+            break;
+        default:
+            std::cout << "Invalid choice: " << choice << '\n';
+            break;
+        }
+    }
+
+    if (!uninitialiseOpenIDProvider(idProvider)) {
+        std::cerr << "OpenID IDProvider uninitialisation error" << '\n';
         return 2;
     }
 
-    // User verification and resend code on failure loop
-    std::cout << "User signed-up successfully\n"
-        << "Verification code e-mailed to: " << emailAddress << '\n';
-    const auto code = getInput("Input Verification code");
-    auto verifyUserSuccess = verifyUser(idProvider, code.c_str());
-    while (!verifyUserSuccess) {
-        const bool resendSuccess = resend(idProvider);
-        if (!resendSuccess) {
-            return 2;
-        }
-        const auto newCode = getInput("Reinput Verification code");
-        verifyUserSuccess = verifyUser(idProvider, newCode.c_str());
-    }
-
-    std::cout << "User verified, requesting authentication credentials...\n";
-    void * authentication = alloca(authenticationSize());
-    {
-        const auto success = authenticate(authentication, idProvider);
-        if (!success) {
-            return 1;
-        }
-    }
-
-    std::cout << "Acquiring tokens..." << '\n';
-    // Get authentication credentials from pointer
-    const auto accessToken = getAccessToken(authentication);
-    if (accessToken == nullptr) {
-        return 1;
-    }
-    const auto expiryTime = getExpiryTime(authentication);
-    if (expiryTime == 0) {
-        return 1;
-    }
-    const auto idToken = getIDToken(authentication);
-    if (idToken == nullptr) {
-        return 1;
-    }
-    const auto refreshToken = getRefreshToken(authentication);
-    if (refreshToken == nullptr) {
-        return 1;
-    }
-    const auto tokenType = getTokenType(authentication);
-    if (tokenType == nullptr) {
-        return 1;
-    }
-
-    std::cout << "User authenticated!\n";
-    printAuthentication(accessToken, expiryTime, idToken, refreshToken, tokenType);
-
-    while (true) {
-        const auto del = getInput("Delete profile? (y/n)");
-        if (equal(del, "y")) {
-            const auto deleteUserSuccess = deleteUser(idProvider, authentication);
-            if (!deleteUserSuccess) {
-                return 2;
-            } else {
-                std::cout << "User deleted\n";
-                return 0;
-            }
-        } else if (equal(del, "n")) {
-            std::cout << "User saved\n";
-            return 0;
-        } else {
-            std::cout << "Invalid input: " << del << '\n';
-        }
-    }
-
     if (!uninitialiseOpenIDClient(apiClient)) {
-        return 3;
-    }
-    if (!uninitialiseOpenIDProvider(idProvider)) {
-        return 3;
+        std::cerr << "OpenID Client uninitialisation error" << '\n';
+        return 2;
     }
 
-    free(apiClient);
-    free(idProvider);
-    free(authentication);
+    std::cout << "Shut down successful, goodbye." << '\n';
     
     return 0;
 }
