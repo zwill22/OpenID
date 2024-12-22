@@ -9,11 +9,51 @@
 #include <aws/cognito-idp/model/RespondToAuthChallengeRequest.h>
 #include <aws/cognito-idp/model/DeleteUserRequest.h>
 
+#include "error.hpp"
+
 using namespace Aws::Utils;
 using namespace Aws::Client;
 using namespace Aws::CognitoIdentityProvider;
 
 namespace OpenID {
+
+template <typename AuthenticationResult>
+Authentication authenticateResults(const AuthenticationResult & result) {
+    Authentication authResults;
+
+    // Access token
+    if (!result.AccessTokenHasBeenSet()) {
+        throw OpenIDError("AccessToken not set");
+    }
+    authResults.accessToken = result.GetAccessToken();
+
+    // Expiry time
+    if (!result.ExpiresInHasBeenSet()) {
+        throw OpenIDError("ExpiresIn time not set");
+    }
+    authResults.expiryTime = result.GetExpiresIn();
+
+    // ID token
+    if (!result.IdTokenHasBeenSet()) {
+        throw OpenIDError("IDToken not set");
+    }
+    authResults.idToken = result.GetIdToken();
+    
+    // Refresh token
+    if (!result.RefreshTokenHasBeenSet()) {
+        throw OpenIDError("RefreshToken not set");
+    }
+    authResults.refreshToken = result.GetRefreshToken();
+
+    // Token type
+    if (!result.TokenTypeHasBeenSet()) {
+        throw OpenIDError("TokenType not set");
+    }
+    authResults.tokenType = result.GetTokenType();
+
+    return authResults;
+}
+
 
 template <typename Outcome, typename Request>
 auto checkOutcome(
@@ -21,9 +61,9 @@ auto checkOutcome(
     Request request
 ) {
     if (!outcome.IsSuccess()) {
-        throw std::runtime_error(
+        throw OpenIDError(
             std::string(request.GetServiceRequestName()) + " Error: "
-            + outcome.GetError().GetMessage()
+            + outcome.GetError().GetMessage() + "Thrown from OpenID"
         );
     }
 
@@ -87,7 +127,7 @@ bool checkResult(const ResultType & result) {
             return true;
         }
     } else if (result.GetChallengeName() == Model::ChallengeNameType::NEW_PASSWORD_REQUIRED) {
-        throw std::runtime_error("New password required");
+        throw OpenIDError("New password required");
     }
     
     return false;
@@ -125,7 +165,7 @@ Authentication IDProvider::passwordAuthenticate() const {
         return authenticateResults(selectChallengeResult.GetAuthenticationResult());
     }
 
-    throw std::runtime_error("User not authorised");
+    throw OpenIDError("User not authorised");
 }
 
 void IDProvider::deleteUser(const Authentication & authentication) const {

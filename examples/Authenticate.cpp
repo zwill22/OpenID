@@ -20,7 +20,7 @@ void printToken(const std::string & key, const std::string & value, const size_t
     }
 }
 
-void printAuthentication(const auto & auth) {
+void printAuthentication(const OpenID::Authentication & auth) {
     printRow();
     std::cout << "Authentication result" << '\n';
     printRow();

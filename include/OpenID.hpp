@@ -3,6 +3,7 @@
 
 #include "APIClient.hpp"
 #include "IdentityProvider.hpp"
+#include "error.hpp"
 
 /// C++ header for OpenID library
 
