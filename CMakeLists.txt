@@ -1,8 +1,8 @@
 # Required for Github runner
 cmake_minimum_required(VERSION 3.22)
-project(OpenID VERSION 0.2.0 LANGUAGES CXX)
+project(OpenID VERSION 0.3.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17) # For compatibility with AWS-SDK
 set(SERVICE_COMPONENTS cognito-idp)
 
 message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
