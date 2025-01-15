@@ -66,7 +66,7 @@
                 "USE_CATCH": "OFF",
                 "C_INTERFACE": "ON",
                 "PLATFORM": "OS64",
-                "DEPLOYMENT_TARGET": "18.0",
+                "DEPLOYMENT_TARGET": "17.5",
                 "AWSSDK_ROOT_DIR": "${sourceParentDir}/aws-sdk-cpp-build/install/OS64"
             }
         },
@@ -85,7 +85,7 @@
                 "USE_CATCH": "OFF",
                 "C_INTERFACE": "ON",
                 "PLATFORM": "SIMULATORARM64",
-                "DEPLOYMENT_TARGET": "18.0",
+                "DEPLOYMENT_TARGET": "17.5",
                 "AWSSDK_ROOT_DIR": "${sourceParentDir}/aws-sdk-cpp-build/install/SIMULATORARM64"
             }
         },
