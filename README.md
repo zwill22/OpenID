@@ -1,6 +1,6 @@
-# OpenAPIClient
+# OpenID
 
-Open API client using the [AWS SDK for C++](https://aws.amazon.com/sdk-for-cpp/)
+OpenID is an API client using the [AWS SDK for C++](https://aws.amazon.com/sdk-for-cpp/)
 for user sign-up, verification and authentication. Designed to authorise users
 for the [BusTracker App](https://github.com/zwill22/BusTracker.git).
 

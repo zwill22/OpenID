@@ -6,9 +6,9 @@
 Welcome to OpenID's documentation!
 ==================================
 
-This page contains the documentation for the `OpenID` project.
+This page contains the documentation for the `OpenID`_ project.
 
-.. _iOSBuild: https://github.com/zwill22/iOSBuild
+.. _OpenID: https://github.com/zwill22/OpenID
 
 .. include:: ../README.md
    :parser: myst_parser.sphinx_
