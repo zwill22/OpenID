@@ -5,8 +5,7 @@ build:
   tools:
     python: "3.12"
   jobs:
-    pre_install:
-      - apt install -y doxygen
+    pre_build:
       - doxygen Doxyfile.in
 
 sphinx:
