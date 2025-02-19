@@ -63,7 +63,7 @@ auto checkOutcome(
     if (!outcome.IsSuccess()) {
         throw OpenIDError(
             std::string(request.GetServiceRequestName()) + " Error: "
-            + outcome.GetError().GetMessage() + "Thrown from OpenID"
+            + outcome.GetError().GetMessage() + " Thrown from OpenID"
         );
     }
 

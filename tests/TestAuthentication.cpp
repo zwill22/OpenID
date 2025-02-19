@@ -22,7 +22,7 @@ IDProvider setupIDProvider(
 }
 
 TEST_CASE("Test IDProvider") {
-    constexpr auto userID = "idProviderTestUserName11345";
+    constexpr auto userID = "idProviderTestUserName113456";
     constexpr auto password = "RandomPassword#1234";
     constexpr auto emailAddress = "fake_address@email.com";
 
@@ -37,13 +37,23 @@ TEST_CASE("Test IDProvider") {
     SECTION("Existing (Unverified) Username") {
         const auto idProvider = setupIDProvider(userID, password, emailAddress);
 
+        try
+        {
+            idProvider.signUpUser();
+        }
+        catch(const OpenIDError & e)
+        {
+            const std::string err = e.what();
+            CHECK_THAT(err, ContainsSubstring("User already exists"));
+        }
+
         CHECK_THROWS_WITH(idProvider.signUpUser(), ContainsSubstring("User already exists"));
         CHECK_NOTHROW(idProvider.resendCode());
         CHECK_THROWS_WITH(
             idProvider.verifyUser("VerificationCode"),
             ContainsSubstring("Invalid verification code provided")
         );
-        CHECK_THROWS_WITH(idProvider.passwordAuthenticate(), ContainsSubstring("Incorrect username or password"));
+        CHECK_THROWS_WITH(idProvider.passwordAuthenticate(), ContainsSubstring("User is not confirmed"));
     }
 
     SECTION("Non-existant user") {

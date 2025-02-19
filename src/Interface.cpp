@@ -130,8 +130,14 @@ bool authenticate(void * authentication, void *idProviderPtr) {
         *authenticator = idProvider->passwordAuthenticate();
 
         return true;
-    } catch (const OpenIDError & e) {
+    } catch (const OpenIDError &e) {
         std::cerr << "Error: " << e.what() << '\n';
+        return false;
+    } catch (const std::exception & e) {
+        std::cerr << "Caught exception..." << '\n';
+        return false;
+    } catch (...) {
+        std::cerr << "Authentication error caught" << '\n';
         return false;
     }
 }
