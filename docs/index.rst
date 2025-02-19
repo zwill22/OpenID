@@ -18,7 +18,6 @@ This page contains the documentation for the `OpenID` project.
    :caption: Contents:
    
    about
-   modules
    link_license
 
 .. seealso::
