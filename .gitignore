@@ -2,3 +2,7 @@
 out/
 build/
 install/
+framework/
+_build/
+_static/
+_templates/
