@@ -18,6 +18,10 @@ This page contains the documentation for the `OpenID`_ project.
    :caption: Contents:
    
    about
+   cpp
+   c_api
+   usage
+   cusage
    link_license
 
 .. seealso::
