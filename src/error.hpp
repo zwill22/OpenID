@@ -6,6 +6,7 @@
 
 namespace OpenID {
 
+/// @brief Error thrown by OpenID
 struct OpenIDError : public std::runtime_error {
 
   explicit OpenIDError(const std::string & arg)

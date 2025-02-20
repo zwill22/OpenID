@@ -7,6 +7,7 @@
 
 namespace OpenID {
 
+/// @brief Structure for storing results of authentication
 struct Authentication {
     std::string accessToken;
     size_t expiryTime;
